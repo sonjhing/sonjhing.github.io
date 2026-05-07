@@ -1,11 +1,21 @@
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="robots" content="index,follow">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-<meta name="theme-color" content="#ffffff">
-<link rel="stylesheet" href="{{ "/assets/css/style.css" | prepend: site.baseurl }}">
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <meta name='description' content='{{ site.description }}' />
+  <link rel='canonical'
+        href='{{ site.url }}{{ site.baseurl }}{{ page.url | replace:'index.html','' }}'>
+
+  <title>
+    {{ site.name }}
+    {% if page.title %}| {{ page.title }}{% endif %}
+  </title>
+
+  <link rel='stylesheet' type='text/css' href='{{ site.baseurl }}/assets/app.css' />
+  <link href='//fonts.googleapis.com/css?family=Poppins' rel='stylesheet' type='text/css'>
+
+  <!--[if lte IE 8]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
