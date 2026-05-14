@@ -1,8 +1,50 @@
----
-layout: default
----
-<ul>
-	{% for post in site.posts %}
-	<li><a href="{{  post.url }}" title="{{ post.title }}"><img src="/assets/img/file.ico" title="{{ post.title }}" />{{ post.title }}</a></li>
-	{% endfor %}
-</ul>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sonjhing — Portfolio 2026</title>
+    <meta name="description" content="sonjhing's creative portfolio 2026">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Ripple container -->
+    <div id="ripple-container"></div>
+
+    <!-- Grain overlay -->
+    <div class="grain-overlay"></div>
+
+    <!-- Main content -->
+    <main class="hero" id="hero">
+        <!-- Tangerine image -->
+        <div class="fruit-wrapper">
+            <img src="assets/images/tangerine.png" alt="" class="fruit-img">
+        </div>
+
+        <!-- PORTFOLIO letters -->
+        <div class="portfolio-text" id="portfolio-text">
+            <a href="pages/projects.html" class="letter" style="--c:#3B82F6;--i:0" data-tip="Projects">P</a>
+            <a href="pages/overview.html" class="letter" style="--c:#06B6D4;--i:1" data-tip="Overview">O</a>
+            <a href="pages/resume.html" class="letter" style="--c:#10B981;--i:2" data-tip="Resume">R</a>
+            <a href="pages/timeline.html" class="letter" style="--c:#F59E0B;--i:3" data-tip="Timeline">T</a>
+            <a href="pages/featured.html" class="letter" style="--c:#8B5CF6;--i:4" data-tip="Featured">F</a>
+            <a href="pages/others.html" class="letter" style="--c:#10B981;--i:5" data-tip="Others">O</a>
+            <a href="pages/links.html" class="letter" style="--c:#F59E0B;--i:6" data-tip="Links">L</a>
+            <a href="pages/info.html" class="letter" style="--c:#EC4899;--i:7" data-tip="Info">I</a>
+            <a href="pages/contact.html" class="letter" style="--c:#EF4444;--i:8" data-tip="Contact">O</a>
+        </div>
+
+        <!-- Labels -->
+        <div class="label label-fresh">FIGHTING 100%</div>
+        <div class="label label-refresh">안녕하세요!</div>
+
+        <!-- Footer -->
+        <div class="footer-badge">2026 PORTFOLIO</div>
+    </main>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
