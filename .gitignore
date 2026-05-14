@@ -3,6 +3,14 @@ dist/
 .astro/
 .output/
 
+# Jekyll
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+Gemfile.lock
+vendor/
+
 # dependencies
 node_modules/
 

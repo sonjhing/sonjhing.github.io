@@ -1,16 +1,35 @@
 permalink: /:year:month:day/:title
-url: #Your url here
-baseurl: /project
+url: https://sonjhing.github.io
+baseurl: ""
 
 # variables
-name: Your Site Name
-description: Your description here
+name: sonjhing's Blog
+description: sonjhing's personal blog
 google_verification: null
 
 
 # File management
 include: [".htaccess"]
-exclude: ["README.md", "LICENSE"]
+exclude:
+  - README.md
+  - LICENSE
+  - node_modules
+  - package.json
+  - package-lock.json
+  - pnpm-lock.yaml
+  - astro.config.mjs
+  - tsconfig.json
+  - src
+  - public
+  - .prettierrc
+  - .node-version
+  - env.example
+  - .env.sample
+  - ARCHITECTURE.md
+  - CONTENT_PROVIDERS.md
+  - SUPPORT.md
+  - sfasfasf.txt
+  - gull2.jpg
 
 # Sass
 sass:
