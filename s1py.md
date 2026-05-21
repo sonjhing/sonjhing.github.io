@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: default
 title: Python Developer Documentation
 ---
 
@@ -91,12 +91,9 @@ title: Python Developer Documentation
     min-height: 80vh;
   }
   
-  .sidebar {
-    width: 250px;
-    background: var(--card-bg);
-    border-right: 1px solid var(--border);
-    padding: 1.5rem 0;
-    flex-shrink: 0;
+  /* 사이드바 영역 완전 숨김 처리 */
+  .sidebar, .docs-sidebar, aside {
+    display: none !important;
   }
   .sidebar-title {
     font-size: 0.85rem;
