@@ -24,7 +24,7 @@ title: Python Developer Documentation
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
   .ide-window {
-    max-width: 1200px;
+    max-width: 1400px;
     width: 100%;
     margin: 2rem auto;
     background: var(--ide-bg);
@@ -62,11 +62,11 @@ title: Python Developer Documentation
   .ide-tab {
     background: var(--ide-tab-inactive);
     color: #969696;
-    padding: 0 18px;
-    height: 100%;
+    padding: 0 20px;
+    height: 95%;
     display: flex;
     align-items: center;
-    font-size: 13px;
+    font-size: 14px;
     font-family: Consolas, 'Courier New', monospace;
     border-right: 1px solid var(--border);
     position: relative;
