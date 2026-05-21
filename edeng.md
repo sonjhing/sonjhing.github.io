@@ -92,7 +92,7 @@ layout: null
     .hero-section {
         height: 380px;
         background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0)), 
-                    url('C:/Users/user/Desktop/sonjhing.github.io/SEA') center/cover no-repeat;
+                    url('SEA.avif') center/cover no-repeat;
         position: relative;
         padding: 40px 60px;
     }
@@ -213,7 +213,7 @@ layout: null
 
             <section class="bottom-section">
                 <div class="content-card">
-                    <img src="C:/Users/user/Desktop/sonjhing.github.io/yum" alt="sea boat">
+                    <img src="yum.jpg" alt="sea boat">
                 </div>
 
                 <div class="description-area">
@@ -227,7 +227,7 @@ layout: null
                 </div>
 
                 <div class="right-thumb">
-                    <img src="C:/Users/user/Desktop/sonjhing.github.io/Btouch" alt="next place">
+                    <img src="Btouch.jpg" alt="next place">
                 </div>
             </section>
 
