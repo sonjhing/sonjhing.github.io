@@ -24,7 +24,8 @@ title: Python Developer Documentation
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
   .ide-window {
-    max-width: 900px;
+    max-width: 1200px;
+    width: 95%;
     margin: 2rem auto;
     background: var(--ide-bg);
     border: 1px solid var(--border);
@@ -54,11 +55,12 @@ title: Python Developer Documentation
   .ide-tabs {
     display: flex;
     height: 100%;
+    overflow-x: auto;
   }
   .ide-tab {
-    background: var(--ide-tab-active);
-    color: #ffffff;
-    padding: 0 20px;
+    background: var(--ide-tab-inactive);
+    color: #969696;
+    padding: 0 16px;
     height: 100%;
     display: flex;
     align-items: center;
@@ -67,13 +69,58 @@ title: Python Developer Documentation
     border-right: 1px solid var(--border);
     position: relative;
     cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+    text-decoration: none;
   }
-  .ide-tab::before {
+  .ide-tab:hover {
+    background: #37373d;
+    color: #ffffff;
+  }
+  .ide-tab.active {
+    background: var(--ide-tab-active);
+    color: #ffffff;
+  }
+  .ide-tab.active::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 2px;
-    background: #007acc; /* VS Code active tab line */
+    background: #007acc;
+  }
+  .ide-tab .tab-icon {
+    margin-right: 6px;
+    font-size: 14px;
+  }
+  .py-icon { color: #519aba; }
+
+  /* Scroll to Top Button */
+  .scroll-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    background: #007acc;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,122,204,0.4);
+    transition: all 0.25s ease;
+    z-index: 9999;
+    opacity: 0.85;
+    text-decoration: none;
+  }
+  .scroll-top-btn:hover {
+    background: #1f6feb;
+    transform: translateY(-3px);
+    opacity: 1;
+    box-shadow: 0 6px 20px rgba(31,111,235,0.5);
   }
   .ide-breadcrumb {
     background: #1e1e1e;
@@ -267,6 +314,7 @@ title: Python Developer Documentation
   }
 </style>
 
+<div id="top"></div>
 <div class="ide-window">
 
   <!-- IDE Top Bar -->
@@ -277,15 +325,27 @@ title: Python Developer Documentation
       <div class="ide-dot dot-green"></div>
     </div>
     <div class="ide-tabs">
-      <div class="ide-tab">
-        <span style="color: #519aba; margin-right: 8px;">&#10094;&#10095;</span> s1py.md
-      </div>
+      <a href="#01" class="ide-tab active">
+        <span class="tab-icon py-icon">&#9998;</span> python.py
+      </a>
+      <a href="#02" class="ide-tab">
+        <span class="tab-icon py-icon">&#9998;</span> data.py
+      </a>
+      <a href="#03" class="ide-tab">
+        <span class="tab-icon py-icon">&#9998;</span> if.py
+      </a>
+      <a href="#04" class="ide-tab">
+        <span class="tab-icon py-icon">&#9998;</span> function.py
+      </a>
+      <a href="#05" class="ide-tab">
+        <span class="tab-icon py-icon">&#9998;</span> module.py
+      </a>
     </div>
   </div>
   
   <!-- IDE Breadcrumb -->
   <div class="ide-breadcrumb">
-    workspace > docs > <span>s1py.md</span>
+    workspace > src > <span>python.py</span>
   </div>
 
   <div class="ide-content">
@@ -800,3 +860,6 @@ from 모듈이름 import 모듈함수
     </div>
   </div>
 </div>
+
+<!-- Scroll to Top Button -->
+<a href="#top" class="scroll-top-btn" title="맨 위로">&#8679;</a>
