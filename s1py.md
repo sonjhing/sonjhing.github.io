@@ -274,16 +274,6 @@ title: Python Developer Documentation
   
   <div class="editor-layout">
     
-    <!-- Sidebar (Explorer 역할) -->
-    <div class="sidebar">
-      <div class="sidebar-title">EXPLORER</div>
-      <a href="#01" class="toc-item"><span class="icon"></span> 01. 파이썬이란?</a>
-      <a href="#02" class="toc-item"><span class="icon"></span> 02. 자료형과 변수</a>
-      <a href="#03" class="toc-item"><span class="icon"></span> 03. 제어문</a>
-      <a href="#04" class="toc-item"><span class="icon"></span> 04. 함수 function</a>
-      <a href="#05" class="toc-item"><span class="icon"></span> 05. 모듈 및 패키지</a>
-    </div>
-
     <!-- Main Editor Content -->
     <div class="editor-content" markdown="1">
 
