@@ -3,7 +3,7 @@ layout: null
 ---
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+KR:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -20,7 +20,7 @@ layout: null
   box-sizing: border-box;
 }
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Outfit', 'Noto Sans KR', sans-serif;
   background: var(--bg);
   color: var(--dark);
 }
@@ -81,7 +81,7 @@ body {
 }
 .sidebar .home-btn {
   width: 40px;
-  height: 40px;
+  height: 200px;
   border-radius: 50%;
   background: rgba(255,255,255,0.1);
   display: flex;
@@ -186,10 +186,9 @@ body {
 
 /* ── Search Box – teal gradient ── */
 .search-box {
-  position: absolute;
-  right: 48px;
-  bottom: -32px;
-  width: 320px;
+  position: relative;
+  margin: 20px auto 0;
+  width: 350px;
   background: linear-gradient(135deg, #0d9488, #0891b2);
   border-radius: 24px;
   padding: 26px 28px;
@@ -288,21 +287,21 @@ body {
   border: 1px solid rgba(0,0,0,0.04);
   transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
+.photo-card.left {
+  height: 260px;
+}
+.photo-card.right {
+  height: 180px;
+}
+.photo-card img {
+  height: 100%;
+  object-fit: cover;
+}
 .photo-card:hover {
-  transform: translateY(-6px) scale(1.01);
+  transform: translateY(-6px) scale(1.08);
   box-shadow:
     0 8px 20px rgba(0,0,0,0.08),
     0 24px 56px rgba(0,0,0,0.14);
-}
-.photo-card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.5s ease;
-}
-.photo-card:hover img {
-  transform: scale(1.05);
 }
 .photo-label {
   position: absolute;
@@ -424,33 +423,27 @@ body {
     </aside>
     <main class="main-content">
 
-      <section class="hero-section">
-        <div class="hero-text">
-          <div class="hero-subtitle">필리핀 어학연수 기록</div>
-          <h1 class="hero-title">대학교 1학년 겨울 방학</h1>
-          <p class="hero-highlight">한달 필리핀 어학연수</p>
-        </div>
-        <div class="search-box">
-          <div class="search-row">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="검색어를 입력하세요">
-          </div>
-          <h4>자주 찾는 검색어:</h4>
-          <p>어학연수 / 필리핀 / 여행 / 공부 / 추억</p>
-        </div>
-      </section>
+
       <section class="bottom-content">
         <div class="info-row">
           <span class="info-tag"><i class="fa-solid fa-plane"></i> 필리핀</span>
           <span class="info-tag"><i class="fa-solid fa-calendar"></i> 겨울 방학</span>
           <span class="info-tag"><i class="fa-solid fa-clock"></i> 한 달</span>
         </div>
+          <div class="search-box">
+            <div class="search-row">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" placeholder="검색어를 입력하세요">
+            </div>
+            <h4>자주 찾는 검색어:</h4>
+            <p>어학연수 / 필리핀 / 여행 / 공부 / 추억</p>
+          </div>
         <div class="photos-grid">
-          <div class="photo-card">
+<div class="photo-card left">
             <img src="Btouch.jpg" alt="비행기 만져보기">
             <div class="photo-label"><i class="fa-solid fa-camera" style="margin-right:6px;font-size:0.7rem;"></i> 비행기 만져보기</div>
           </div>
-          <div class="photo-card">
+<div class="photo-card right">
             <img src="yum.jpg" alt="가서 먹은 음식">
             <div class="photo-label"><i class="fa-solid fa-utensils" style="margin-right:6px;font-size:0.7rem;"></i> 가서 먹은 음식</div>
           </div>
