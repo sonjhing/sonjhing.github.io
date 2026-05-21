@@ -25,26 +25,28 @@ title: Python Developer Documentation
   }
   .ide-window {
     max-width: 1200px;
-    width: 95%;
+    width: 100%;
     margin: 2rem auto;
     background: var(--ide-bg);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    box-shadow: 0 15px 35px rgba(255,255,255,0.03);
+    backdrop-filter: blur(10px);
   }
   .ide-titlebar {
     background: var(--ide-topbar);
-    height: 35px;
+    height: 40px;
     display: flex;
     align-items: center;
     border-bottom: 1px solid var(--border);
+    padding: 0 14px;
   }
   .ide-dots {
     display: flex;
     gap: 8px;
-    margin-left: 15px;
-    margin-right: 15px;
+    margin-left: 4px;
+    margin-right: 18px;
   }
   .ide-dot {
     width: 12px; height: 12px; border-radius: 50%;
@@ -60,7 +62,7 @@ title: Python Developer Documentation
   .ide-tab {
     background: var(--ide-tab-inactive);
     color: #969696;
-    padding: 0 16px;
+    padding: 0 18px;
     height: 100%;
     display: flex;
     align-items: center;
@@ -76,10 +78,20 @@ title: Python Developer Documentation
   .ide-tab:hover {
     background: #37373d;
     color: #ffffff;
+
+    transition:
+    background 0.2s ease,
+    color 0.2s ease;
   }
   .ide-tab.active {
     background: var(--ide-tab-active);
     color: #ffffff;
+
+    box-shadow:
+    inset 0 -2px 0 #4fc3f7,
+    0 0 12px rgba(79,195,247,0.15);
+
+    font-weight: 600;
   }
   .ide-tab.active::before {
     content: '';
