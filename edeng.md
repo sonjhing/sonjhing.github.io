@@ -7,7 +7,7 @@ layout: null
 
 <style>
 :root {
-  --bg: #f3f4f6;
+  --bg: #202225;
   --panel: #ffffff;
   --accent: #f27474;
   --dark: #111827;
@@ -32,7 +32,7 @@ body {
 }
 .wrapper {
   width: 100%;
-  max-width: 1140px;
+  max-width: 1400px;
   border-radius: 28px;
   overflow: hidden;
   display: grid;
@@ -52,7 +52,7 @@ body {
 .sidebar .logo {
   font-size: 0.95rem;
   letter-spacing: 2px;
-  font-weight: 700;
+  font-weight: 750;
 }
 .sidebar .info-btn {
   font-size: 0.85rem;
@@ -277,36 +277,29 @@ body {
             <input type="text" placeholder="Search a destination">
           </div>
           <h4>Frequent searches:</h4>
-          <p>Country / Beach / Mountain / Trip / Boat / Sea / Weather</p>
+          <p>English / Study / Trip / 어학연수 </p>
         </div>
       </section>
       <section class="bottom-content">
         <div class="card">
-          <img src="yum.jpg" alt="sea boat">
+          <img src="Btouch.jpg" alt="sea boat">
         </div>
         <div class="description">
           <span class="place-tag">Place Name 01</span>
           <h3>Lorem ipsum dolor sit amet.</h3>
-          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+          <p>대학교 1학년 겨울방학 한달 필리핀 어학연수 </p>
           <div class="booking">
-            <strong>600$ / person</strong>
-            <a href="#" class="book-btn">BOOK NOW</a>
+            <strong>비행기 만져보기/strong>
+            <a href="#" class="book-btn"> 가서 먹은 음식</a>
           </div>
         </div>
         <div class="right-thumb">
-          <img src="Btouch.jpg" alt="next place">
+          <img src="yum.jpg" alt="next place">
         </div>
       </section>
-      <footer class="footer">
-        <div class="social-links">
-          <a href="#"><i class="fa-brands fa-facebook-f"></i> /liveadventure</a>
-          <a href="#"><i class="fa-brands fa-instagram"></i> @liveadventure</a>
-          <a href="#"><i class="fa-brands fa-youtube"></i> @live.adventure</a>
-        </div>
         <div class="slider">
           <i class="fa-solid fa-caret-left"></i>
           <span>01</span>
-          <span>/05</span>
           <i class="fa-solid fa-caret-right"></i>
         </div>
       </footer>
