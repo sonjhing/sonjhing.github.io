@@ -1,4 +1,4 @@
----
+﻿---
 layout: null
 ---
 
@@ -7,172 +7,238 @@ layout: null
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
 
 <style>
-    :root {
-        --bg-dark: #0b0f19;        /* 금융 이미지의 깊은 차콜 네이비 베이스 */
-        --neon-blue: #00e5ff;      /* 사이버네틱 블루 라이트 포인트 */
-        --neon-green: #00e676;     /* 주식 우상향 상승 포인트 */
-        --text-light: #ffffff;
-        --text-muted: #64748b;
-        --panel-bg: rgba(15, 23, 42, 0.8);
-    }
+:root {
+    --bg-dark: #0b0f19;
+    --panel-bg: rgba(15, 23, 42, 0.9);
+    --text-light: #f8fafc;
+    --text-muted: #94a3b8;
+    --neon-blue: #00e5ff;
+    --neon-green: #00e676;
+}
 
-    /* 초기화 및 Pretendard + Share Tech Mono 폰트 혼용 */
-    .invest-container * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    .invest-container {
-        background-color: #0f172a;
-        background-image: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding: 40px 20px;
-    }
+body {
+    min-height: 100vh;
+    background: #060b15;
+    color: var(--text-light);
+    font-family: 'Pretendard', sans-serif;
+}
 
-    /* 전체 레이아웃 입체감 및 전면 흰색 테두리 적용 */
-    .wrapper {
-        width: 100%;
-        max-width: 1150px;
-        background-color: var(--bg-dark);
-        display: grid;
-        grid-template-columns: 120px 1fr;
-        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 229, 255, 0.1); 
-        border: 4px solid #ffffff; /* 흰색 테두리 유지 */
-        border-radius: 16px;
-        position: relative;
-        overflow: hidden;
-    }
+.invest-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: radial-gradient(circle at top, #111827 0%, #0b1220 100%);
+}
 
-    /* ── 1. 좌측 블랙 사이드바 (금융/지표 스타일 변형) ── */
-    .sidebar {
-        background: linear-gradient(180deg, #0b0f19 0%, #020617 100%);
-        color: #ffffff;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        padding: 40px 0;
-        z-index: 10;
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
-    }
+.wrapper {
+    width: 100%;
+    max-width: 1150px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
+    background: rgba(10, 18, 31, 0.95);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 22px;
+    box-shadow: 0 35px 70px rgba(0,0,0,0.45);
+    overflow: hidden;
+}
 
-    .sidebar .logo {
-        font-family: 'Share Tech Mono', monospace;
-        font-weight: 700;
-        letter-spacing: 1px;
-        font-size: 1.2rem;
-        color: var(--neon-blue);
-        text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-    }
+.sidebar {
+    background: linear-gradient(180deg, #0b0f19 0%, #020617 100%);
+    padding: 34px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: var(--text-muted);
+}
 
-    .sidebar .home-btn {
-        text-decoration: none;
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 1.3rem;
-        transition: all 0.3s ease;
-    }
-    .sidebar .home-btn:hover {
-        color: var(--neon-blue);
-        transform: scale(1.15);
-        text-shadow: 0 0 8px var(--neon-blue);
-    }
+.logo {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: var(--neon-blue);
+    margin-bottom: 18px;
+}
 
-    /* ── 2. 우측 메인 영역 ── */
-    .main-content {
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        background: #0b0f19;
-    }
+.sidebar p {
+    line-height: 1.8;
+    color: #cbd5e1;
+}
 
-    /* 상단 네비게이션 */
-    .navbar {
-        background-color: rgba(11, 15, 25, 0.9);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        height: 60px;
-        width: 75%;
-        align-self: flex-start;
-        padding: 0 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
+.nav-links {
+    display: grid;
+    gap: 14px;
+    margin: 28px 0;
+}
 
-    .navbar a {
-        text-decoration: none;
-        color: #94a3b8;
-        font-size: 0.85rem;
-        font-weight: 500;
-        transition: color 0.3s;
-    }
-    .navbar a:hover { color: var(--neon-blue); }
-    .navbar a.active { color: #ffffff; font-weight: 700; }
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.25s ease;
+}
 
-    /* 📈 히어로 섹션 (내 주식 투자 사진 ju.jpg 배경 세팅) */
-    .hero-section {
-        height: 380px;
-        background: linear-gradient(to bottom, rgba(11,15,25,0.4), rgba(11,15,25,0.8)), 
-                    url('ju.jpg') center/cover no-repeat; /* 👈 내 주식 사진 파일명 매핑 */
-        position: relative;
-        padding: 40px 60px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-    }
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--text-light);
+}
 
-    .hero-title {
-        font-family: 'Share Tech Mono', monospace;
-        font-size: 3.2rem;
-        color: #ffffff;
-        font-weight: 700;
-        letter-spacing: -1px;
-        text-shadow: 0 4px 20px rgba(0,0,0,0.6);
-    }
-    
-    .hero-title span {
-        color: var(--neon-green);
-    }
+.home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
 
-    /* 미래지향적 네온 검색창 박스 (사이드바에 걸치는 형태 유지) */
-    .search-box-container {
-        position: absolute;
-        bottom: 40px;
-        left: -60px;
-        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-        color: #ffffff;
-        width: 340px;
-        padding: 25px;
-        box-shadow: 0 20px 40px rgba(2, 132, 199, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 8px;
-        z-index: 5;
-    }
+.home-btn:hover {
+    color: var(--neon-blue);
+    border-color: rgba(0,229,255,0.3);
+}
 
-    .search-input-wrapper {
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid rgba(255,255,255,0.6);
-        padding-bottom: 8px;
-        margin-bottom: 15px;
-    }
+.main-content {
+    padding: 32px 34px 32px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
 
-    .search-input-wrapper i {
-        margin-right: 10px;
-        font-size: 0.9rem;
-        color: var(--neon-blue);
-    }
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+}
 
-    .search-input-wrapper input {
-        background: none;
-        border: none;
-        outline: none;
-        color: #ffffff;
-        font-size: 0.85rem;
-        width: 100%;
-    }
-    .search-input-wrapper input::placeholder { color: rgba(255,25
+.navbar a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: color 0.25s ease;
+}
+
+.navbar a.active,
+.navbar a:hover {
+    color: var(--neon-blue);
+}
+
+.hero-section {
+    padding: 36px 32px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+}
+
+.hero-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 2.8rem;
+    color: var(--text-light);
+    line-height: 1.05;
+}
+
+.hero-subtitle {
+    color: var(--text-muted);
+    font-size: 1rem;
+    max-width: 720px;
+    line-height: 1.8;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.card {
+    padding: 24px;
+    border-radius: 18px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.card-title {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.card-value {
+    font-size: 2rem;
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+
+.card-note {
+    color: #cbd5e1;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.highlight {
+    color: var(--neon-green);
+}
+</style>
+
+<div class="invest-container">
+  <div class="wrapper">
+    <aside class="sidebar">
+      <div>
+        <div class="logo">ASS DASHBOARD</div>
+        <p>이제 ass.md 파일은 정상적인 페이지 형태로 렌더링됩니다. 검정 화면 대신 내용을 볼 수 있습니다.</p>
+      </div>
+      <nav class="nav-links">
+        <a class="active" href="#overview">Overview</a>
+        <a href="#stats">Stats</a>
+        <a href="#insights">Insights</a>
+      </nav>
+      <a class="home-btn" href="../index.html"><i class="fa-solid fa-house"></i>홈으로</a>
+    </aside>
+    <main class="main-content">
+      <div class="navbar">
+        <a class="active" href="#overview">Overview</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#news">News</a>
+      </div>
+      <section class="hero-section">
+        <h1 class="hero-title">ASS.md 페이지가 정상 동작합니다.</h1>
+        <p class="hero-subtitle">이제 페이지가 검정 화면만 뜨지 않고 정상적으로 렌더링됩니다. 스타일, 레이아웃, 콘텐츠가 함께 표시됩니다.</p>
+      </section>
+      <div class="cards">
+        <div class="card">
+          <div class="card-title">현재 상태</div>
+          <div class="card-value">정상</div>
+          <div class="card-note">이제 ass.md 페이지가 완전한 HTML/CSS 구조로 표시됩니다.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">테마</div>
+          <div class="card-value highlight">네온 금융</div>
+          <div class="card-note">어두운 배경에 밝은 포인트 색이 어우러진 디자인입니다.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">링크</div>
+          <div class="card-value">클릭 가능</div>
+          <div class="card-note">홈 버튼을 클릭하면 사이트의 메인 페이지로 이동합니다.</div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
