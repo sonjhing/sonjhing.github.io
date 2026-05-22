@@ -8,12 +8,14 @@ layout: null
 
 <style>
 :root {
-    --bg-dark: #0b0f19;
-    --panel-bg: rgba(15, 23, 42, 0.9);
-    --text-light: #f8fafc;
-    --text-muted: #94a3b8;
-    --neon-blue: #00e5ff;
-    --neon-green: #00e676;
+    --bg-dark: #060614;
+    --panel-bg: rgba(8, 10, 18, 0.75);
+    --text-light: #f4f9fb;
+    --text-muted: #9aa7b8;
+    --neon-cyan: #00e5ff;
+    --neon-pink: #ff3ec7;
+    --neon-purple: #8a2be2;
+    --neon-green: #00ff9f;
 }
 
 * {
@@ -24,9 +26,12 @@ layout: null
 
 body {
     min-height: 100vh;
-    background: #060b15;
     color: var(--text-light);
     font-family: 'Pretendard', sans-serif;
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(138,43,226,0.06), transparent 8%),
+      linear-gradient(180deg, rgba(0,0,0,0.6), rgba(2,6,12,0.9)),
+      url('SEA.avif') center/cover fixed no-repeat;
 }
 
 .invest-container {
@@ -49,6 +54,7 @@ body {
     border-radius: 22px;
     box-shadow: 0 35px 70px rgba(0,0,0,0.45);
     overflow: hidden;
+    position: relative;
 }
 
 .sidebar {
@@ -148,9 +154,11 @@ body {
 
 .hero-title {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 2.8rem;
+    font-size: 3rem;
     color: var(--text-light);
     line-height: 1.05;
+    text-shadow: 0 0 12px rgba(0,229,255,0.12), 0 0 28px rgba(255,62,199,0.06);
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,0.6));
 }
 
 .hero-subtitle {
@@ -171,6 +179,51 @@ body {
     border-radius: 18px;
     background: rgba(15, 23, 42, 0.85);
     border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Neon signs and cyberpunk accents */
+.neon-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+.neon-sign {
+    position: absolute;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 0 18px rgba(0,229,255,0.12), 0 6px 30px rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px);
+    transform: translateZ(0);
+    animation: neon-flicker 3s infinite alternate;
+}
+.neon-sign.pink { color: var(--neon-pink); box-shadow: 0 0 20px rgba(255,62,199,0.18); }
+.neon-sign.purple { color: var(--neon-purple); box-shadow: 0 0 20px rgba(138,43,226,0.18); }
+.vertical-sign {
+    writing-mode: vertical-rl;
+    font-size: 1.14rem;
+    padding: 10px 8px;
+    border-radius: 8px;
+}
+@keyframes neon-flicker {
+    0% { opacity: 1; filter: drop-shadow(0 0 14px rgba(0,229,255,0.25)); }
+    30% { opacity: 0.85; }
+    45% { opacity: 0.96; }
+    60% { opacity: 0.7; filter: none; }
+    100% { opacity: 1; }
+}
+
+.holo-grid {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(transparent 60%, rgba(255,255,255,0.02) 61%), linear-gradient(90deg, rgba(255,255,255,0.02) 60%, transparent 61%);
+    background-size: 100% 60px, 60px 100%;
+    opacity: 0.06;
 }
 
 .card-title {
@@ -200,6 +253,14 @@ body {
 
 <div class="invest-container">
   <div class="wrapper">
+        <div class="neon-layer">
+            <div class="neon-sign pink vertical-sign" style="left:12px;top:40px;">资
+                产
+            </div>
+            <div class="neon-sign purple" style="right:28px;top:28px;">ASSET INVEST</div>
+            <div class="neon-sign" style="right:140px;top:110px;">HONG KONG</div>
+            <div class="holo-grid"></div>
+        </div>
     <aside class="sidebar">
       <div>
         <div class="logo">ASS DASHBOARD</div>
@@ -218,16 +279,16 @@ body {
         <a href="#portfolio">Portfolio</a>
         <a href="#news">News</a>
       </div>
-      <section class="hero-section">
-        <h1 class="hero-title">ASS.md 페이지가 정상 동작합니다.</h1>
-        <p class="hero-subtitle">이제 페이지가 검정 화면만 뜨지 않고 정상적으로 렌더링됩니다. 스타일, 레이아웃, 콘텐츠가 함께 표시됩니다.</p>
-      </section>
+            <section class="hero-section">
+                <h1 class="hero-title">ASS Dashboard — Asset Investment</h1>
+                <p class="hero-subtitle">실시간 포트폴리오 뷰와 시그널 기반 인사이트로 자산 투자 흐름을 시각화합니다. 네온 간판과 사이버펑크 테마로 홍콩 밤거리를 연상시킵니다.</p>
+            </section>
       <div class="cards">
-        <div class="card">
-          <div class="card-title">현재 상태</div>
-          <div class="card-value">정상</div>
-          <div class="card-note">이제 ass.md 페이지가 완전한 HTML/CSS 구조로 표시됩니다.</div>
-        </div>
+                <div class="card">
+                    <div class="card-title">포트폴리오 가치</div>
+                    <div class="card-value highlight">₿ 1.182M</div>
+                    <div class="card-note">실시간 합산 자산 가치 — 네온 인디케이터로 시각화됩니다.</div>
+                </div>
         <div class="card">
           <div class="card-title">테마</div>
           <div class="card-value highlight">네온 금융</div>
