@@ -181,6 +181,58 @@ body {
     border: 1px solid rgba(255,255,255,0.08);
 }
 
+/* Ticker tape */
+.ticker {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    margin: 12px 0 6px 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
+    border: 1px solid rgba(255,255,255,0.04);
+}
+.ticker-track {
+    display: inline-flex;
+    gap: 28px;
+    padding: 10px 20px;
+    white-space: nowrap;
+    animation: ticker-scroll 18s linear infinite;
+}
+.ticker-item {
+    color: var(--text-muted);
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: 700;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px rgba(0,229,255,0.08);
+}
+@keyframes ticker-scroll {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Chart placeholder */
+.chart {
+    height: 220px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(16,18,28,0.6), rgba(10,12,18,0.4));
+    border: 1px solid rgba(255,255,255,0.04);
+    box-shadow: inset 0 0 40px rgba(138,43,226,0.02);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+}
+
+.chart .placeholder {
+    width: 92%;
+    height: 78%;
+    background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.12);
+}
+
 /* Neon signs and cyberpunk accents */
 .neon-layer {
     position: absolute;
@@ -262,26 +314,38 @@ body {
             <div class="holo-grid"></div>
         </div>
     <aside class="sidebar">
-      <div>
-        <div class="logo">ASS DASHBOARD</div>
-        <p>이제 ass.md 파일은 정상적인 페이지 형태로 렌더링됩니다. 검정 화면 대신 내용을 볼 수 있습니다.</p>
-      </div>
-      <nav class="nav-links">
-        <a class="active" href="#overview">Overview</a>
-        <a href="#stats">Stats</a>
-        <a href="#insights">Insights</a>
-      </nav>
+            <div>
+                <div class="logo">ASS DASHBOARD</div>
+                <p>실시간 시세, 포트폴리오 노출, 리스크/리턴 분석 제공 — 전문 트레이더 관점의 요약 대시보드입니다.</p>
+            </div>
+            <nav class="nav-links">
+                <a class="active" href="#overview">개요</a>
+                <a href="#stats">지표</a>
+                <a href="#insights">인사이트</a>
+            </nav>
       <a class="home-btn" href="../index.html"><i class="fa-solid fa-house"></i>홈으로</a>
     </aside>
     <main class="main-content">
-      <div class="navbar">
-        <a class="active" href="#overview">Overview</a>
-        <a href="#portfolio">Portfolio</a>
-        <a href="#news">News</a>
-      </div>
+            <div class="navbar">
+                <a class="active" href="#overview">마켓</a>
+                <a href="#portfolio">포트폴리오</a>
+                <a href="#news">뉴스</a>
+            </div>
+            <div class="ticker" aria-hidden="true">
+                <div class="ticker-track">
+                    <div class="ticker-item">BTC/USD 58,120 ▲1.8%</div>
+                    <div class="ticker-item">ETH/USD 3,920 ▲2.4%</div>
+                    <div class="ticker-item">AAPL 174.20 ▼0.6%</div>
+                    <div class="ticker-item">TSLA 237.90 ▲3.2%</div>
+                    <div class="ticker-item">HSI 21,340 ▼0.9%</div>
+                </div>
+            </div>
             <section class="hero-section">
                 <h1 class="hero-title">ASS Dashboard — Asset Investment</h1>
                 <p class="hero-subtitle">실시간 포트폴리오 뷰와 시그널 기반 인사이트로 자산 투자 흐름을 시각화합니다. 네온 간판과 사이버펑크 테마로 홍콩 밤거리를 연상시킵니다.</p>
+                <div class="chart" role="img" aria-label="시장 차트">
+                    <div class="placeholder">심볼 차트(예: BTC/USD) — 차트 라이브러리로 대체 가능</div>
+                </div>
             </section>
       <div class="cards">
                 <div class="card">
@@ -289,16 +353,16 @@ body {
                     <div class="card-value highlight">₿ 1.182M</div>
                     <div class="card-note">실시간 합산 자산 가치 — 네온 인디케이터로 시각화됩니다.</div>
                 </div>
-        <div class="card">
-          <div class="card-title">테마</div>
-          <div class="card-value highlight">네온 금융</div>
-          <div class="card-note">어두운 배경에 밝은 포인트 색이 어우러진 디자인입니다.</div>
-        </div>
-        <div class="card">
-          <div class="card-title">링크</div>
-          <div class="card-value">클릭 가능</div>
-          <div class="card-note">홈 버튼을 클릭하면 사이트의 메인 페이지로 이동합니다.</div>
-        </div>
+                <div class="card">
+                    <div class="card-title">시장 지수</div>
+                    <div class="card-value">HSI 21,340</div>
+                    <div class="card-note">홍콩 항셍지수 실시간 브리핑 · 일간 변동성 확인</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">거래 신호</div>
+                    <div class="card-value highlight">BTC: 매수(단기)</div>
+                    <div class="card-note">모멘텀·볼륨 기반 신호 — 포지션 크기 권장: 2% 포트폴리오</div>
+                </div>
       </div>
     </main>
   </div>
