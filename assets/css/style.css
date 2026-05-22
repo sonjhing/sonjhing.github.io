@@ -5,12 +5,17 @@
     --bg: #0a0a0a;
     --text: #f0f0f0;
     --text-dim: rgba(255,255,255,0.5);
+    /* Hong Kong cyberpunk neon palette */
+    --hk-neon-pink: #ff00ff;
+    --hk-neon-cyan: #00ffff;
+    --hk-neon-purple: #ff00aa;
+    --hk-neon-yellow: #ffff00;
 }
 
 html, body {
     width: 100%; height: 100%;
     overflow: hidden;
-    background: var(--bg);
+    background: var(--bg) url('../assets/images/hk_cityscape.jpg') center/cover no-repeat;
     color: var(--text);
     font-family: 'Inter', sans-serif;
     cursor: crosshair;
@@ -251,7 +256,7 @@ html, body {
 /* ===== Sub-page Styles ===== */
 .page-container {
     min-height: 100vh;
-    background: var(--bg);
+    background: var(--bg) url('assets/images/hk_cityscape_1779418161772.png') center/cover no-repeat;
     color: var(--text);
     display: flex;
     flex-direction: column;
