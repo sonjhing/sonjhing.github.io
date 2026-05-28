@@ -11,11 +11,11 @@
     --neon-blue: #00aaff;
     --neon-cyan: #00eeff;
     --neon-ice: #aaddff;
-    --dark-bg: #00060f;
-    --panel-bg: rgba(0, 20, 50, 0.85);
-    --border-glow: rgba(0, 170, 255, 0.4);
+    --dark-bg: #020813;
+    --panel-bg: rgba(0, 15, 35, 0.75);
+    --border-glow: rgba(0, 170, 255, 0.25);
     --text: #cceeff;
-    --text-dim: rgba(150, 210, 255, 0.6);
+    --text-dim: rgba(150, 210, 255, 0.5);
     --green: #00ff88;
     --red: #ff3355;
   }
@@ -23,120 +23,82 @@
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    min-height: 100vh;
+    height: 100vh;
     background: var(--dark-bg);
     color: var(--text);
     font-family: 'Share Tech Mono', monospace;
-    overflow-x: hidden;
+    overflow: hidden;
     position: relative;
   }
 
-  /* === Animated Grid Background === */
+  /* === Background Grid & Glow === */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
     background-image:
-      linear-gradient(rgba(0,170,255,0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,170,255,0.05) 1px, transparent 1px);
-    background-size: 40px 40px;
-    animation: grid-move 20s linear infinite;
+      linear-gradient(rgba(0,170,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,170,255,0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
     z-index: 0;
     pointer-events: none;
   }
 
-  /* === Blue Radial Glow === */
   body::after {
     content: '';
     position: fixed;
     inset: 0;
-    background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,120,255,0.25) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0,80,200,0.2) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 40% at 10% 80%, rgba(0,180,255,0.15) 0%, transparent 50%);
+    background: radial-gradient(circle at 50% 10%, rgba(0,120,255,0.15) 0%, transparent 70%);
     z-index: 0;
     pointer-events: none;
   }
 
-  @keyframes grid-move {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(40px); }
-  }
-
-  /* === Scanline overlay === */
   .scanlines {
     position: fixed;
     inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 170, 255, 0.015) 2px,
-      rgba(0, 170, 255, 0.015) 4px
-    );
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 170, 255, 0.01) 2px, rgba(0, 170, 255, 0.01) 4px);
     z-index: 1;
     pointer-events: none;
   }
 
-  /* === Layout === */
+  /* === Fullscreen App Layout === */
   .dashboard {
     position: relative;
     z-index: 2;
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: auto 1fr;
-    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   /* === TOP BAR === */
   .topbar {
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 32px;
-    background: rgba(0, 10, 30, 0.9);
+    padding: 0 24px;
+    background: rgba(0, 8, 20, 0.95);
     border-bottom: 1px solid var(--border-glow);
-    box-shadow: 0 0 30px rgba(0, 170, 255, 0.15), inset 0 -1px 0 rgba(0, 200, 255, 0.3);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.5);
   }
 
-  .topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    transition: color 0.3s, text-shadow 0.3s;
-    border: 1px solid rgba(0,170,255,0.2);
-    padding: 6px 14px;
-    border-radius: 4px;
-  }
-  .back-btn:hover {
-    color: var(--neon-cyan);
-    text-shadow: 0 0 10px var(--neon-cyan);
-    border-color: var(--neon-cyan);
-  }
+  .topbar-left, .topbar-right { display: flex; align-items: center; gap: 16px; }
 
   .logo {
     font-family: 'Orbitron', monospace;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 900;
     color: var(--neon-cyan);
-    text-shadow: 0 0 20px var(--neon-cyan), 0 0 40px rgba(0,238,255,0.4);
-    letter-spacing: 0.2em;
+    text-shadow: 0 0 10px var(--neon-cyan);
+    letter-spacing: 0.1em;
   }
 
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 24px;
+  .terminal-status {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    border-left: 2px solid var(--neon-blue);
+    padding-left: 10px;
   }
 
   .live-badge {
@@ -146,349 +108,218 @@
     font-size: 0.75rem;
     color: var(--green);
     text-shadow: 0 0 8px var(--green);
-    letter-spacing: 0.1em;
   }
 
   .live-dot {
-    width: 8px; height: 8px;
+    width: 6px; height: 6px;
     border-radius: 50%;
     background: var(--green);
-    box-shadow: 0 0 10px var(--green), 0 0 20px rgba(0,255,136,0.5);
+    box-shadow: 0 0 8px var(--green);
     animation: pulse-dot 1.5s ease-in-out infinite;
   }
 
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
-  }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-  .time-display {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    letter-spacing: 0.08em;
-  }
-
-  /* === MAIN GRID === */
+  /* === MAIN CONTENT (No Scroll Layout) === */
   .main-grid {
+    flex: 1;
     display: grid;
-    grid-template-columns: 260px 1fr;
-    grid-template-rows: 1fr;
-    min-height: calc(100vh - 60px);
+    grid-template-columns: 240px 1fr;
+    height: calc(100vh - 90px); /* Adjusting for topbar and footer ticker */
   }
 
-  /* === SIDEBAR === */
+  /* === SIDEBAR WATCHLIST === */
   .sidebar {
-    background: rgba(0, 8, 24, 0.95);
+    background: rgba(0, 5, 15, 0.9);
     border-right: 1px solid var(--border-glow);
-    padding: 28px 20px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    box-shadow: inset -20px 0 40px rgba(0,120,255,0.05);
+    gap: 20px;
+    overflow-y: auto;
   }
 
   .sidebar-section-title {
     font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    color: var(--neon-blue);
     text-transform: uppercase;
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid rgba(0,170,255,0.15);
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(0,170,255,0.2);
   }
 
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    border-radius: 6px;
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
-    transition: all 0.25s;
-    border: 1px solid transparent;
-    margin-bottom: 4px;
-  }
-
-  .nav-item i { width: 16px; text-align: center; }
-
-  .nav-item:hover, .nav-item.active {
-    color: var(--neon-cyan);
-    background: rgba(0,170,255,0.08);
-    border-color: rgba(0,170,255,0.25);
-    text-shadow: 0 0 10px rgba(0,238,255,0.5);
-    box-shadow: 0 0 15px rgba(0,170,255,0.08), inset 0 0 10px rgba(0,170,255,0.05);
-  }
-
-  /* Ticker sidebar */
-  .ticker-list { display: flex; flex-direction: column; gap: 6px; }
+  .ticker-list { display: flex; flex-direction: column; gap: 4px; }
 
   .ticker-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 10px;
-    border-radius: 4px;
-    border: 1px solid rgba(0,170,255,0.1);
-    background: rgba(0,30,70,0.4);
-    font-size: 0.78rem;
-    transition: border-color 0.3s;
-    cursor: pointer;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 8px;
+    border: 1px solid rgba(0,170,255,0.05);
+    background: rgba(0,20,50,0.2);
+    font-size: 0.75rem;
+    border-radius: 3px;
   }
 
-  .ticker-item:hover { border-color: var(--neon-blue); }
+  .ticker-item:hover { border-color: rgba(0,170,255,0.3); background: rgba(0,20,50,0.4); }
 
-  .ticker-name { color: var(--neon-ice); letter-spacing: 0.05em; }
+  .ticker-name { color: #fff; font-weight: bold; }
+  .ticker-up { color: var(--green); }
+  .ticker-down { color: var(--red); }
 
-  .ticker-up { color: var(--green); text-shadow: 0 0 6px rgba(0,255,136,0.4); }
-  .ticker-down { color: var(--red); text-shadow: 0 0 6px rgba(0,255,136,0.4); }
-
-  /* === CONTENT === */
-  .content {
-    padding: 28px 32px;
+  /* === WORKSPACE === */
+  .workspace {
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    overflow-y: auto;
+    gap: 12px;
+    height: 100%;
   }
 
-  /* === HERO PANEL === */
-  .hero-panel {
-    background: var(--panel-bg);
-    border: 1px solid var(--border-glow);
-    border-radius: 12px;
-    padding: 36px 40px;
-    position: relative;
-    overflow: hidden;
-    box-shadow:
-      0 0 40px rgba(0,120,255,0.15),
-      inset 0 0 60px rgba(0,80,200,0.08);
-  }
-
-  .hero-panel::before {
-    content: '';
-    position: absolute;
-    top: -40px; right: -40px;
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(0,170,255,0.15) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-  }
-
-  .hero-panel::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--neon-blue), var(--neon-cyan), transparent);
-    box-shadow: 0 0 15px var(--neon-blue);
-  }
-
-  .hero-label {
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-    color: var(--neon-cyan);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    text-shadow: 0 0 10px var(--neon-cyan);
-  }
-
-  .hero-title {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(1.8rem, 4vw, 3rem);
-    font-weight: 900;
-    color: #fff;
-    text-shadow:
-      0 0 20px var(--neon-blue),
-      0 0 50px rgba(0,170,255,0.4),
-      0 0 100px rgba(0,120,255,0.2);
-    line-height: 1.1;
-    margin-bottom: 16px;
-    letter-spacing: 0.05em;
-  }
-
-  .hero-sub {
-    color: var(--text-dim);
-    font-family: 'Inter', sans-serif;
-    font-size: 0.95rem;
-    line-height: 1.7;
-    max-width: 600px;
-  }
-
-  /* === KPI CARDS === */
+  /* === MINI KPI DASHBOARD === */
   .kpi-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
   }
 
   .kpi-card {
     background: var(--panel-bg);
     border: 1px solid var(--border-glow);
-    border-radius: 10px;
-    padding: 20px 22px;
-    position: relative;
-    overflow: hidden;
-    transition: box-shadow 0.3s, border-color 0.3s;
-    cursor: default;
-  }
-
-  .kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--neon-blue), var(--neon-cyan));
-    box-shadow: 0 0 10px var(--neon-blue);
-  }
-
-  .kpi-card:hover {
-    border-color: var(--neon-blue);
-    box-shadow: 0 0 25px rgba(0,170,255,0.2), 0 0 50px rgba(0,120,255,0.1);
+    padding: 10px 14px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 10px rgba(0,170,255,0.05);
   }
 
   .kpi-label {
-    font-size: 0.68rem;
-    letter-spacing: 0.18em;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
     color: var(--text-dim);
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
   }
 
   .kpi-value {
     font-family: 'Orbitron', monospace;
-    font-size: 1.9rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: var(--neon-cyan);
-    text-shadow: 0 0 20px rgba(0,238,255,0.6);
-    line-height: 1;
-    margin-bottom: 8px;
+    color: #fff;
   }
 
-  .kpi-change {
-    font-size: 0.78rem;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
+  .kpi-change { font-size: 0.7rem; margin-top: 2px; }
+  .kpi-change.up { color: var(--green); }
+  .kpi-change.down { color: var(--red); }
 
-  .kpi-change.up { color: var(--green); text-shadow: 0 0 8px rgba(0,255,136,0.4); }
-  .kpi-change.down { color: var(--red); text-shadow: 0 0 8px rgba(255,51,85,0.4); }
-
-  /* === CHART AREA === */
-  .chart-row {
+  /* === TRADING VIEW (CHART + HOLDINGS) === */
+  .trading-view {
+    flex: 1;
     display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 16px;
+    grid-template-columns: 1fr 380px;
+    gap: 12px;
+    min-height: 0; /* Crucial for preventing overflow flex items */
   }
 
-  .chart-panel {
+  .panel {
     background: var(--panel-bg);
     border: 1px solid var(--border-glow);
-    border-radius: 10px;
-    padding: 24px;
-    box-shadow: 0 0 30px rgba(0,100,200,0.1);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 
   .panel-header {
+    height: 34px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    padding: 0 14px;
+    background: rgba(0, 25, 60, 0.4);
+    border-bottom: 1px solid rgba(0,170,255,0.15);
   }
 
   .panel-title {
     font-family: 'Orbitron', monospace;
-    font-size: 0.85rem;
-    color: var(--neon-blue);
-    text-shadow: 0 0 10px rgba(0,170,255,0.5);
-    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    color: var(--neon-cyan);
+    letter-spacing: 0.05em;
   }
 
   .panel-badge {
     font-size: 0.65rem;
-    padding: 3px 10px;
+    padding: 2px 6px;
     border: 1px solid var(--neon-blue);
-    border-radius: 20px;
     color: var(--neon-blue);
-    letter-spacing: 0.1em;
+    border-radius: 2px;
   }
 
-  /* SVG Chart */
+  /* Chart Fitting */
+  .panel-body-chart {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+  }
+
   .chart-svg-wrapper {
-    position: relative;
-    height: 180px;
+    width: 100%;
+    height: 100%;
   }
 
   .chart-svg-wrapper svg {
     width: 100%;
     height: 100%;
-    overflow: visible;
   }
 
-  /* Glow filter */
-  .glow-line {
-    filter: drop-shadow(0 0 4px #00aaff) drop-shadow(0 0 8px #00aaff);
+  /* Table Grid View */
+  .panel-body-table {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
   }
 
-  /* === DATA TABLE === */
-  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table { width: 100%; border-collapse: collapse; text-align: left; }
 
   .data-table th {
+    position: sticky;
+    top: 0;
+    background: rgba(0, 12, 30, 0.95);
     font-size: 0.65rem;
-    letter-spacing: 0.15em;
     color: var(--text-dim);
-    text-transform: uppercase;
-    text-align: left;
     padding: 8px 12px;
-    border-bottom: 1px solid rgba(0,170,255,0.15);
+    border-bottom: 1px solid rgba(0,170,255,0.2);
+    text-transform: uppercase;
+    z-index: 10;
   }
 
   .data-table td {
-    font-size: 0.82rem;
-    padding: 10px 12px;
-    border-bottom: 1px solid rgba(0,170,255,0.07);
-    color: var(--text);
-    transition: background 0.2s;
+    font-size: 0.75rem;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(0,170,255,0.05);
+    font-family: 'Share Tech Mono', monospace;
   }
 
-  .data-table tr:hover td { background: rgba(0,170,255,0.06); }
+  .data-table tr:hover td { background: rgba(0,170,255,0.08); }
 
-  .td-up { color: var(--green); text-shadow: 0 0 6px rgba(0,255,136,0.4); }
-  .td-down { color: var(--red); text-shadow: 0 0 6px rgba(255,51,85,0.4); }
-  .td-blue { color: var(--neon-cyan); }
+  .td-name { color: #fff; font-weight: 500; }
+  .td-up { color: var(--green); }
+  .td-down { color: var(--red); }
 
-  /* === FOOTER === */
-  .footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 32px;
-    border-top: 1px solid rgba(0,170,255,0.12);
-    background: rgba(0,5,15,0.9);
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    letter-spacing: 0.08em;
-    position: relative;
-    z-index: 2;
-  }
-
-  /* === Running ticker bar at the very bottom === */
+  /* === TICKER BOTTOM BAR === */
   .ticker-bar {
-    background: rgba(0,10,30,0.95);
+    height: 32px;
+    background: rgba(0, 5, 15, 0.95);
     border-top: 1px solid var(--border-glow);
-    padding: 8px 0;
+    display: flex;
+    align-items: center;
     overflow: hidden;
-    position: relative;
-    z-index: 3;
   }
 
   .ticker-track {
     display: flex;
-    gap: 48px;
-    animation: ticker-run 30s linear infinite;
+    gap: 32px;
+    animation: ticker-run 25s linear infinite;
     white-space: nowrap;
   }
 
@@ -500,21 +331,13 @@
   .ticker-chip {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    font-size: 0.78rem;
-    color: var(--text-dim);
+    gap: 8px;
+    font-size: 0.72rem;
   }
-
-  .ticker-chip span { color: var(--neon-ice); }
+  .ticker-chip .name { color: var(--neon-ice); font-weight: bold; }
   .ticker-chip .up { color: var(--green); }
   .ticker-chip .dn { color: var(--red); }
 
-  /* responsive */
-  @media (max-width: 900px) {
-    .main-grid { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    .chart-row { grid-template-columns: 1fr; }
-  }
 </style>
 </head>
 <body>
@@ -524,180 +347,155 @@
   <!-- TOP BAR -->
   <header class="topbar">
     <div class="topbar-left">
-      <a class="back-btn" href="index.html"><i class="fa-solid fa-chevron-left"></i> HOME</a>
-      <div class="logo">▸ ASSET_DASHBOARD</div>
+      <div class="logo">◈ SONJIHEE_TERMINAL v2.4</div>
+      <div class="terminal-status">SYS_STATUS: ACTIVE</div>
     </div>
     <div class="topbar-right">
-      <div class="live-badge"><div class="live-dot"></div> LIVE</div>
-      <div class="time-display" id="clock">--:--:--</div>
+      <div class="live-badge"><div class="live-dot"></div> MONITOR_LIVE</div>
+      <div id="clock" style="font-size: 0.8rem; color: var(--neon-cyan);">00:00:00</div>
     </div>
   </header>
 
+  <!-- MAIN WRAPPER -->
   <div class="main-grid">
-    <!-- SIDEBAR -->
+    <!-- LEFT SIDEBAR: WATCHLIST -->
     <aside class="sidebar">
       <div>
-        <div class="sidebar-section-title">Navigation</div>
-        <a class="nav-item active" href="#overview"><i class="fa-solid fa-chart-line"></i> Overview</a>
-        <a class="nav-item" href="#portfolio"><i class="fa-solid fa-wallet"></i> Portfolio</a>
-        <a class="nav-item" href="#market"><i class="fa-solid fa-globe"></i> Market</a>
-        <a class="nav-item" href="#signals"><i class="fa-solid fa-bolt"></i> Signals</a>
-        <a class="nav-item" href="index.html"><i class="fa-solid fa-house"></i> 홈으로</a>
-      </div>
-
-      <div>
-        <div class="sidebar-section-title">Watch List</div>
+        <div class="sidebar-section-title" style="margin-bottom: 8px;">GLOBAL INDEX</div>
         <div class="ticker-list">
-          <div class="ticker-item"><span class="ticker-name">KRX</span><span class="ticker-up">▲ +1.32%</span></div>
-          <div class="ticker-item"><span class="ticker-name">NASDAQ</span><span class="ticker-up">▲ +0.87%</span></div>
-          <div class="ticker-item"><span class="ticker-name">HSI</span><span class="ticker-down">▼ -0.54%</span></div>
-          <div class="ticker-item"><span class="ticker-name">S&amp;P 500</span><span class="ticker-up">▲ +0.44%</span></div>
-          <div class="ticker-item"><span class="ticker-name">NIKKEI</span><span class="ticker-down">▼ -0.21%</span></div>
-          <div class="ticker-item"><span class="ticker-name">BITCOIN</span><span class="ticker-up">▲ +3.15%</span></div>
+          <div class="ticker-item"><span class="ticker-name">KRX 코스피</span><span class="ticker-up">▲ 1.32%</span></div>
+          <div class="ticker-item"><span class="ticker-name">NASDAQ</span><span class="ticker-up">▲ 0.87%</span></div>
+          <div class="ticker-item"><span class="ticker-name">S&amp;P 500</span><span class="ticker-up">▲ 0.44%</span></div>
+          <div class="ticker-item"><span class="ticker-name">HSI 항셍</span><span class="ticker-down">▼ 0.54%</span></div>
+          <div class="ticker-item"><span class="ticker-name">NIKKEI 225</span><span class="ticker-down">▼ 0.21%</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-section-title" style="margin-bottom: 8px;">CRYPTO CORE</div>
+        <div class="ticker-list">
+          <div class="ticker-item"><span class="ticker-name">BITCOIN</span><span class="ticker-up">▲ 3.15%</span></div>
+          <div class="ticker-item"><span class="ticker-name">ETHEREUM</span><span class="ticker-up">▲ 1.92%</span></div>
         </div>
       </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="content">
-
-      <!-- HERO -->
-      <section class="hero-panel" id="overview">
-        <div class="hero-label">◈ PORTFOLIO COMMAND CENTER</div>
-        <h1 class="hero-title">ASSET<br>TRACKER</h1>
-        <p class="hero-sub">실시간 포트폴리오 현황 및 자산 분석 대시보드입니다.<br>데이터 기반으로 최적의 투자 결정을 내리세요.</p>
+    <!-- RIGHT MAIN WORKSPACE -->
+    <main class="workspace">
+      <!-- COMPACT KPI ROW -->
+      <section class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">SEED AVG / CURRENT</div>
+          <div class="kpi-value" style="color: var(--green);">24,500 <span style="font-size:0.75rem; color:var(--text-dim)">KRW</span></div>
+          <div class="kpi-change up">▲ +740.00% TOTAL</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">GLOBAL ASSET RATIO</div>
+          <div class="kpi-value">$154,100</div>
+          <div class="kpi-change up">▲ +103.40% TODAY</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">SS CAPITAL FLOW</div>
+          <div class="kpi-value">294,000</div>
+          <div class="kpi-change up">▲ +166.00% TARGET</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">INDEX RATIO VALUE</div>
+          <div class="kpi-value" style="color: var(--red);">659,000</div>
+          <div class="kpi-change down">▼ -17.80% RISK</div>
+        </div>
       </section>
 
-      <!-- KPI CARDS -->
-      <div class="kpi-row">
-        <div class="kpi-card">
-          <div class="kpi-label">my average 2930</div>
-          <div class="kpi-value">now 24500 </div>
-          <div class="kpi-change up"><i class="fa-solid fa-arrow-trend-up"></i> +740% total</div>
+      <!-- TRADING MAIN PANEL (CHART & TABLE) -->
+      <div class="trading-view">
+        <!-- SVG LINE CHART PANEL -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">INTERACTIVE PERFORMANCE INDEX</div>
+            <div class="panel-badge">REAL-TIME GRAVITY</div>
+          </div>
+          <div class="panel-body-chart">
+            <div class="chart-svg-wrapper">
+              <svg viewBox="0 0 700 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#00aaff" stop-opacity="0.25"/>
+                    <stop offset="100%" stop-color="#00aaff" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <!-- Grid Lines -->
+                <line x1="0" y1="40" x2="700" y2="40" stroke="rgba(0,170,255,0.05)" stroke-width="1"/>
+                <line x1="0" y1="90" x2="700" y2="90" stroke="rgba(0,170,255,0.05)" stroke-width="1"/>
+                <line x1="0" y1="140" x2="700" y2="140" stroke="rgba(0,170,255,0.05)" stroke-width="1"/>
+                <line x1="0" y1="190" x2="700" y2="190" stroke="rgba(0,170,255,0.05)" stroke-width="1"/>
+                <!-- Area Path -->
+                <path d="M0,180 L70,150 L140,155 L210,120 L280,130 L350,90 L420,70 L490,100 L560,50 L630,65 L700,25 L700,220 L0,220 Z" fill="url(#lineGrad)"/>
+                <!-- Main Trend Line -->
+                <path d="M0,180 L70,150 L140,155 L210,120 L280,130 L350,90 L420,70 L490,100 L560,50 L630,65 L700,25" fill="none" stroke="#00eeff" stroke-width="2"/>
+                <!-- Dynamic Dots -->
+                <circle cx="700" cy="25" r="4" fill="#00ff88"/>
+                <circle cx="350" cy="90" r="3" fill="#00aaff"/>
+                <!-- Timeline Labels -->
+                <text x="10" y="212" fill="rgba(150,210,255,0.3)" font-size="10">09:00</text>
+                <text x="175" y="212" fill="rgba(150,210,255,0.3)" font-size="10">11:00</text>
+                <text x="345" y="212" fill="rgba(150,210,255,0.3)" font-size="10">13:00</text>
+                <text x="515" y="212" fill="rgba(150,210,255,0.3)" font-size="10">15:00</text>
+                <text x="665" y="212" fill="rgba(150,210,255,0.3)" font-size="10">CLOSE</text>
+              </svg>
+            </div>
+          </div>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-label">my avg $517.64</div>
-          <div class="kpi-value">now $154100</div>
-          <div class="kpi-change up"><i class="fa-solid fa-arrow-trend-up"></i> +103.40% today</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">SS 135500</div>
-          <div class="kpi-value">now 294000</div>
-          <div class="kpi-change up"><i class="fa-solid fa-check"></i> +166%</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">560,000</div>
-          <div class="kpi-value">now 659,000</div>
-          <div class="kpi-change down"><i class="fa-solid fa-arrow-down"></i> +17.80%</div>
+
+        <!-- HOLDINGS POSITION TABLE PANEL -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">MY POSITION HOLDINGS</div>
+            <div class="panel-badge" style="border-color:var(--green); color:var(--green)">SECURED</div>
+          </div>
+          <div class="panel-body-table">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ASSET CODE</th>
+                  <th style="text-align: right;">CHANGE %</th>
+                  <th style="text-align: right;">VALUATION</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="td-name">SAMSUNG ELECTRONICS</td><td class="td-up" style="text-align: right;">+2.10%</td><td style="text-align: right; color: var(--neon-ice);">₩1,200,000</td></tr>
+                <tr><td class="td-name">KAKAO CORP</td><td class="td-down" style="text-align: right;">-0.80%</td><td style="text-align: right; color: var(--neon-ice);">₩540,000</td></tr>
+                <tr><td class="td-name">NAVER</td><td class="td-up" style="text-align: right;">+1.50%</td><td style="text-align: right; color: var(--neon-ice);">₩890,000</td></tr>
+                <tr><td class="td-name">BITCOIN (BTC)</td><td class="td-up" style="text-align: right;">+3.10%</td><td style="text-align: right; color: var(--neon-ice);">₩700,000</td></tr>
+                <tr><td class="td-name">ETHEREUM (ETH)</td><td class="td-up" style="text-align: right;">+1.90%</td><td style="text-align: right; color: var(--neon-ice);">₩420,000</td></tr>
+                <tr><td class="td-name">TESLA MOTORS</td><td class="td-down" style="text-align: right;">-1.20%</td><td style="text-align: right; color: var(--neon-ice);">₩450,000</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-
-      <!-- CHART + TABLE ROW -->
-      <div class="chart-row">
-        <!-- SVG Line Chart -->
-        <div class="chart-panel">
-          <div class="panel-header">
-            <div class="panel-title">◈ PORTFOLIO PERFORMANCE</div>
-            <div class="panel-badge">1M VIEW</div>
-          </div>
-          <div class="chart-svg-wrapper">
-            <svg viewBox="0 0 700 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#00aaff" stop-opacity="0.3"/>
-                  <stop offset="100%" stop-color="#00aaff" stop-opacity="0"/>
-                </linearGradient>
-                <filter id="glow-filter">
-                  <feGaussianBlur stdDeviation="3" result="blur"/>
-                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-              </defs>
-              <!-- Grid lines -->
-              <line x1="0" y1="45" x2="700" y2="45" stroke="rgba(0,170,255,0.08)" stroke-width="1"/>
-              <line x1="0" y1="90" x2="700" y2="90" stroke="rgba(0,170,255,0.08)" stroke-width="1"/>
-              <line x1="0" y1="135" x2="700" y2="135" stroke="rgba(0,170,255,0.08)" stroke-width="1"/>
-              <!-- Area fill -->
-              <path d="M0,140 L50,120 L100,115 L150,100 L200,105 L250,85 L300,70 L350,80 L400,55 L450,60 L500,40 L550,45 L600,30 L650,35 L700,20 L700,180 L0,180 Z"
-                    fill="url(#lineGrad)"/>
-              <!-- Main line -->
-              <path d="M0,140 L50,120 L100,115 L150,100 L200,105 L250,85 L300,70 L350,80 L400,55 L450,60 L500,40 L550,45 L600,30 L650,35 L700,20"
-                    fill="none" stroke="#00aaff" stroke-width="2.5" class="glow-line" filter="url(#glow-filter)"/>
-              <!-- Dots -->
-              <circle cx="700" cy="20" r="5" fill="#00eeff" filter="url(#glow-filter)"/>
-              <circle cx="500" cy="40" r="3" fill="#00aaff" opacity="0.8"/>
-              <circle cx="300" cy="70" r="3" fill="#00aaff" opacity="0.8"/>
-              <!-- Labels -->
-              <text x="8" y="175" fill="rgba(150,210,255,0.4)" font-size="9" font-family="Share Tech Mono">JAN</text>
-              <text x="155" y="175" fill="rgba(150,210,255,0.4)" font-size="9" font-family="Share Tech Mono">FEB</text>
-              <text x="305" y="175" fill="rgba(150,210,255,0.4)" font-size="9" font-family="Share Tech Mono">MAR</text>
-              <text x="455" y="175" fill="rgba(150,210,255,0.4)" font-size="9" font-family="Share Tech Mono">APR</text>
-              <text x="605" y="175" fill="rgba(150,210,255,0.4)" font-size="9" font-family="Share Tech Mono">MAY</text>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Asset Table -->
-        <div class="chart-panel" id="portfolio">
-          <div class="panel-header">
-            <div class="panel-title">◈ HOLDINGS</div>
-          </div>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Asset</th>
-                <th>Chg%</th>
-                <th>Val</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="td-blue">SAMSUNG</td><td class="td-up">+2.1%</td><td>₩1.2M</td></tr>
-              <tr><td class="td-blue">KAKAO</td><td class="td-down">-0.8%</td><td>₩540K</td></tr>
-              <tr><td class="td-blue">NAVER</td><td class="td-up">+1.5%</td><td>₩890K</td></tr>
-              <tr><td class="td-blue">BTC</td><td class="td-up">+3.1%</td><td>₩700K</td></tr>
-              <tr><td class="td-blue">ETH</td><td class="td-up">+1.9%</td><td>₩420K</td></tr>
-              <tr><td class="td-blue">TESLA</td><td class="td-down">-1.2%</td><td>₩450K</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
     </main>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <span>◈ SONJIHEE ASSET TRACKER v2.0</span>
-    <span>DATA REFRESHED LIVE</span>
-    <span>© 2026 SONJIHEE</span>
-  </footer>
-
-  <!-- TICKER BAR -->
+  <!-- RUNNING TICKER FOOTER BAR -->
   <div class="ticker-bar">
     <div class="ticker-track">
-      <span class="ticker-chip"><span>KRX</span> 2,814.32 <span class="up">▲+1.32%</span></span>
-      <span class="ticker-chip"><span>NASDAQ</span> 18,432.11 <span class="up">▲+0.87%</span></span>
-      <span class="ticker-chip"><span>HSI</span> 19,204.55 <span class="dn">▼-0.54%</span></span>
-      <span class="ticker-chip"><span>S&amp;P500</span> 5,321.00 <span class="up">▲+0.44%</span></span>
-      <span class="ticker-chip"><span>NIKKEI</span> 38,100.44 <span class="dn">▼-0.21%</span></span>
-      <span class="ticker-chip"><span>BTC</span> $67,420 <span class="up">▲+3.15%</span></span>
-      <span class="ticker-chip"><span>ETH</span> $3,540 <span class="up">▲+1.92%</span></span>
-      <span class="ticker-chip"><span>USD/KRW</span> 1,368.40 <span class="dn">▼-0.12%</span></span>
-      <!-- duplicate for seamless loop -->
-      <span class="ticker-chip"><span>KRX</span> 2,814.32 <span class="up">▲+1.32%</span></span>
-      <span class="ticker-chip"><span>NASDAQ</span> 18,432.11 <span class="up">▲+0.87%</span></span>
-      <span class="ticker-chip"><span>HSI</span> 19,204.55 <span class="dn">▼-0.54%</span></span>
-      <span class="ticker-chip"><span>S&amp;P500</span> 5,321.00 <span class="up">▲+0.44%</span></span>
-      <span class="ticker-chip"><span>NIKKEI</span> 38,100.44 <span class="dn">▼-0.21%</span></span>
-      <span class="ticker-chip"><span>BTC</span> $67,420 <span class="up">▲+3.15%</span></span>
-      <span class="ticker-chip"><span>ETH</span> $3,540 <span class="up">▲+1.92%</span></span>
-      <span class="ticker-chip"><span>USD/KRW</span> 1,368.40 <span class="dn">▼-0.12%</span></span>
+      <span class="ticker-chip"><span class="name">KRX</span> 2,814.32 <span class="up">▲+1.32%</span></span>
+      <span class="ticker-chip"><span class="name">NASDAQ</span> 18,432.11 <span class="up">▲+0.87%</span></span>
+      <span class="ticker-chip"><span class="name">HSI</span> 19,204.55 <span class="dn">▼-0.54%</span></span>
+      <span class="ticker-chip"><span class="name">S&amp;P500</span> 5,321.00 <span class="up">▲+0.44%</span></span>
+      <span class="ticker-chip"><span class="name">NIKKEI</span> 38,100.44 <span class="dn">▼-0.21%</span></span>
+      <span class="ticker-chip"><span class="name">BTC/USD</span> $67,420 <span class="up">▲+3.15%</span></span>
+      <span class="ticker-chip"><span class="name">ETH/USD</span> $3,540 <span class="up">▲+1.92%</span></span>
+      <!-- Seamless loop duplicate -->
+      <span class="ticker-chip"><span class="name">KRX</span> 2,814.32 <span class="up">▲+1.32%</span></span>
+      <span class="ticker-chip"><span class="name">NASDAQ</span> 18,432.11 <span class="up">▲+0.87%</span></span>
+      <span class="ticker-chip"><span class="name">HSI</span> 19,204.55 <span class="dn">▼-0.54%</span></span>
+      <span class="ticker-chip"><span class="name">S&amp;P500</span> 5,321.00 <span class="up">▲+0.44%</span></span>
     </div>
   </div>
-
 </div>
 
 <script>
-  // Live clock
+  // High speed sync clock
   function updateClock() {
     const now = new Date();
     document.getElementById('clock').textContent =
@@ -705,14 +503,6 @@
   }
   updateClock();
   setInterval(updateClock, 1000);
-
-  // Animate KPI values slightly to simulate live data
-  const kpiValues = document.querySelectorAll('.kpi-value');
-  setInterval(() => {
-    kpiValues.forEach(el => {
-      el.style.textShadow = `0 0 ${20 + Math.random()*10}px rgba(0,238,255,${0.5 + Math.random()*0.3})`;
-    });
-  }, 2000);
 </script>
 </body>
 </html>
