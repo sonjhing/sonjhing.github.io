@@ -15,6 +15,10 @@
       --text-main: #cccccc;
       --text-dim: #858585;
       
+      /* Windows Titlebar Colors */
+      --win-bg: #323233;
+      --win-text: #ffffff;
+      
       --font-mono: 'Consolas', 'Courier New', monospace;
     }
 
@@ -23,11 +27,96 @@
     body {
       margin: 0;
       padding: 0;
-      background-color: var(--bg-dark);
+      background-color: #0f0f10; /* 바탕화면 느낌의 배경색 */
       color: var(--text-main);
       font-family: var(--font-mono);
-      overflow: hidden; /* No scroll on body, scroll inside editor */
+      overflow: hidden;
       height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ─── WINDOW FRAME CONTAINER ─── */
+    .window-frame {
+      width: 90vw;
+      height: 85vh;
+      background-color: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, opacity 0.3s ease, scale 0.3s ease;
+    }
+
+    .window-frame.closed {
+      transform: scale(0.9);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ─── WINDOW TITLEBAR ─── */
+    .titlebar {
+      height: 32px;
+      background-color: var(--win-bg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+      user-select: none;
+      border-bottom: 1px solid var(--border-color);
+      z-index: 30;
+    }
+
+    .titlebar-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: #aaaaaa;
+    }
+
+    .titlebar-icon {
+      font-size: 0.9rem;
+    }
+
+    .titlebar-controls {
+      display: flex;
+      height: 100%;
+    }
+
+    .win-btn {
+      width: 46px;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      border: none;
+      color: var(--win-text);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .win-btn:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .win-btn.close-btn:hover {
+      background-color: #e81123;
+      color: #fff;
+    }
+
+    /* ─── WINDOW CONTENT AREA ─── */
+    .window-content {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: calc(100% - 32px); /* Titlebar 제외 영역 */
     }
 
     /* ─── ANIMATED TAB CONTAINER ─── */
@@ -73,7 +162,7 @@
     /* Tabs when in active (top-bar) mode */
     .tab-container.active .tab-btn {
       font-size: 0.9rem;
-      padding: 10px 24px;
+      padding: 8px 24px; /* 창 크기에 맞게 패딩 살짝 조절 */
       border: none;
       border-right: 1px solid var(--border-color);
       border-radius: 0;
@@ -130,7 +219,7 @@
     /* ─── EDITOR MAIN AREA ─── */
     .editor-main {
       position: absolute;
-      top: 38px; /* tab height */
+      top: 35px; /* tab height 기준 정렬 */
       left: 250px;
       right: 0;
       bottom: 24px;
@@ -215,6 +304,16 @@
       background: rgba(255,255,255,0.1);
     }
 
+    /* 바탕화면 안내 메시지 */
+    .bg-hint {
+      position: absolute;
+      font-size: 0.9rem;
+      color: #555555;
+      user-select: none;
+      pointer-events: none;
+      text-align: center;
+    }
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
       .sidebar { display: none; }
@@ -223,71 +322,89 @@
     }
   </style>
 </head>
-<body>
+<body ondblclick="openWindow()">
 
-  <!-- Animated Tabs -->
-  <div class="tab-container" id="tab-container">
-    <button class="tab-btn" id="btn-py" onclick="activateFile('s1py.md', 'btn-py')">Python</button>
-    <button class="tab-btn" id="btn-html" onclick="activateFile('html.md', 'btn-html')">HTML</button>
-    <button class="tab-btn" id="btn-c" onclick="activateFile('c.md', 'btn-c')">C언어</button>
-  </div>
+  <div class="bg-hint">창이 닫히면 배경을 더블 클릭하여 다시 여세요.</div>
 
-  <!-- Sidebar / Explorer -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">EXPLORER</div>
-    <div class="file-item selected" id="file-py" onclick="activateFile('s1py.md', 'btn-py')">
-      <span class="file-icon-py">🐍</span> s1py.md
+  <div class="window-frame" id="window-frame">
+    
+    <div class="titlebar">
+      <div class="titlebar-info">
+        <span class="titlebar-icon">💻</span>
+        <span class="titlebar-title">Developer IDE - Visual Studio Code</span>
+      </div>
+      <div class="titlebar-controls">
+        <button class="win-btn" onclick="alert('최소화 기능은 데모 버전에서 지원하지 않습니다.')">─</button>
+        <button class="win-btn" onclick="alert('최대화 기능은 데모 버전에서 지원하지 않습니다.')">❑</button>
+        <button class="win-btn close-btn" onclick="closeWindow(event)">✕</button>
+      </div>
     </div>
-    <div class="file-item" id="file-html" onclick="activateFile('html.md', 'btn-html')">
-      <span class="file-icon-html">🌐</span> html.md
-    </div>
-    <div class="file-item" id="file-c" onclick="activateFile('c.md', 'btn-c')">
-      <span class="file-icon-c">⚙️</span> c.md
-    </div>
-  </div>
 
-  <!-- Editor Output Area -->
-  <div class="editor-main" id="editor-main">
-    <div id="editor-content">
-      <!-- Generated code table goes here -->
-    </div>
-  </div>
+    <div class="window-content">
+      <div class="tab-container" id="tab-container">
+        <button class="tab-btn" id="btn-py" onclick="activateFile('s1py.md', 'btn-py')">Python</button>
+        <button class="tab-btn" id="btn-html" onclick="activateFile('html.md', 'btn-html')">HTML</button>
+        <button class="tab-btn" id="btn-c" onclick="activateFile('c.md', 'btn-c')">C언어</button>
+      </div>
 
-  <!-- Status Bar -->
-  <div class="statusbar">
-    <div class="status-left">
-      <span class="status-item">main*</span>
-      <span class="status-item" id="status-filename">s1py.md</span>
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">EXPLORER</div>
+        <div class="file-item selected" id="file-py" onclick="activateFile('s1py.md', 'btn-py')">
+          <span class="file-icon-py">🐍</span> s1py.md
+        </div>
+        <div class="file-item" id="file-html" onclick="activateFile('html.md', 'btn-html')">
+          <span class="file-icon-html">🌐</span> html.md
+        </div>
+        <div class="file-item" id="file-c" onclick="activateFile('c.md', 'btn-c')">
+          <span class="file-icon-c">⚙️</span> c.md
+        </div>
+      </div>
+
+      <div class="editor-main" id="editor-main">
+        <div id="editor-content">
+          </div>
+      </div>
+
+      <div class="statusbar">
+        <div class="status-left">
+          <span class="status-item">main*</span>
+          <span class="status-item" id="status-filename">s1py.md</span>
+        </div>
+        <div class="status-right">
+          <span class="status-item">Ln <span id="status-lines">0</span>, Col 1</span>
+          <span class="status-item">Spaces: 2</span>
+          <span class="status-item">UTF-8</span>
+          <span class="status-item">Markdown</span>
+        </div>
+      </div>
     </div>
-    <div class="status-right">
-      <span class="status-item">Ln <span id="status-lines">0</span>, Col 1</span>
-      <span class="status-item">Spaces: 2</span>
-      <span class="status-item">UTF-8</span>
-      <span class="status-item">Markdown</span>
-    </div>
+
   </div>
 
   <script>
     let isEditorActive = false;
+
+    // Window Control Functions
+    function closeWindow(e) {
+      e.stopPropagation(); // body의 더블클릭 이벤트 전파 방지
+      document.getElementById('window-frame').classList.add('closed');
+    }
+
+    function openWindow() {
+      document.getElementById('window-frame').classList.remove('closed');
+    }
 
     function renderMarkdownAsCode(text) {
       // 1. Escape HTML entities
       let html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       
       // 2. Syntax Highlighting
-      // Code blocks (multiline)
       html = html.replace(/(```[\s\S]*?```)/g, '<span class="md-code">$1</span>');
-      // Headers
       html = html.replace(/^(#{1,6}\s+.*)$/gm, '<span class="md-header">$1</span>');
-      // Bold
       html = html.replace(/(\*\*.*?\*\*)/g, '<span class="md-bold">$1</span>');
-      // Inline code
       html = html.replace(/(`[^`\n]+`)/g, '<span class="md-code">$1</span>');
-      // Blockquotes
       html = html.replace(/^(>\s+.*)$/gm, '<span class="md-quote">$1</span>');
-      // Links
       html = html.replace(/(\[.*?\]\(.*?\))/g, '<span class="md-link">$1</span>');
-      // HTML tags (escaped earlier, so we target &lt;...&gt;)
       html = html.replace(/(&lt;\/?[\w\s="'-]+&gt;)/g, '<span class="md-html">$1</span>');
 
       // 3. Build line-by-line table
@@ -327,12 +444,10 @@
     }
 
     function activateFile(filename, btnId) {
-      // Trigger layout transition if not already active
       if (!isEditorActive) {
         document.getElementById('tab-container').classList.add('active');
         document.getElementById('sidebar').classList.add('active');
         
-        // Slight delay for editor content to fade in smoothly
         setTimeout(() => {
           document.getElementById('editor-main').classList.add('active');
         }, 300);
@@ -340,17 +455,14 @@
         isEditorActive = true;
       }
 
-      // Update Tab active state
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       const activeBtn = document.getElementById(btnId);
       if (activeBtn) activeBtn.classList.add('active');
 
-      // Update Sidebar active state
       document.querySelectorAll('.file-item').forEach(item => item.classList.remove('selected'));
       const sidebarItem = document.getElementById('file-' + btnId.replace('btn-', ''));
       if (sidebarItem) sidebarItem.classList.add('selected');
 
-      // Load file content
       loadFile(filename);
     }
   </script>
