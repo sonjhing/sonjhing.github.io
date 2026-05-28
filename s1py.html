@@ -430,19 +430,19 @@
 
   <div class="dashboard-container" id="dashboard">
     <div class="index-nav">
-      <div class="index-logo">INDEX / DOCS</div>
+      <div class="index-logo">Skills</div>
       <div class="index-menu">
-        <span class="index-menu-item" onclick="openIdeWithFile('s1py.md', 'btn-py')">Python</span>
+        <span class="index-menu-item" onclick="openIdeWithFile('s2py.md', 'btn-py')">Python</span>
         <span class="index-menu-item" onclick="openIdeWithFile('html.md', 'btn-html')">HTML</span>
         <span class="index-menu-item" onclick="openIdeWithFile('c.md', 'btn-c')">C Language</span>
       </div>
     </div>
 
     <div class="card-grid">
-      <div class="lang-card" onclick="openIdeWithFile('s1py.md', 'btn-py')">
+      <div class="lang-card" onclick="openIdeWithFile('s2py.md', 'btn-py')">
         <span class="icon">🐍</span>
         <h3>Python</h3>
-        <p>s1py.md 파일 열기</p>
+        <p>s2py.md 파일 열기</p>
       </div>
       <div class="lang-card" onclick="openIdeWithFile('html.md', 'btn-html')">
         <span class="icon">🌐</span>
@@ -475,15 +475,15 @@
 
     <div class="window-content">
       <div class="tab-container" id="tab-container">
-        <button class="tab-btn" id="btn-py" onclick="activateFile('s1py.md', 'btn-py')">Python</button>
+        <button class="tab-btn" id="btn-py" onclick="activateFile('s2py.md', 'btn-py')">Python</button>
         <button class="tab-btn" id="btn-html" onclick="activateFile('html.md', 'btn-html')">HTML</button>
         <button class="tab-btn" id="btn-c" onclick="activateFile('c.md', 'btn-c')">C언어</button>
       </div>
 
       <div class="sidebar" id="sidebar">
         <div class="sidebar-header">EXPLORER</div>
-        <div class="file-item" id="file-py" onclick="activateFile('s1py.md', 'btn-py')">
-          <span class="file-icon-py">🐍</span> s1py.md
+        <div class="file-item" id="file-py" onclick="activateFile('s2py.md', 'btn-py')">
+          <span class="file-icon-py">🐍</span> s2py.md
         </div>
         <div class="file-item" id="file-html" onclick="activateFile('html.md', 'btn-html')">
           <span class="file-icon-html">🌐</span> html.md
@@ -500,7 +500,7 @@
       <div class="statusbar">
         <div class="status-left">
           <span class="status-item">main*</span>
-          <span class="status-item" id="status-filename">s1py.md</span>
+          <span class="status-item" id="status-filename">s2py.md</span>
         </div>
         <div class="status-right">
           <span class="status-item">Ln <span id="status-lines">0</span>, Col 1</span>
@@ -515,7 +515,7 @@
 
     // 초기 구동 시 s1py.md 자동 로드
     window.onload = function() {
-      activateFile('s1py.md', 'btn-py');
+      activateFile('s2py.md', 'btn-py');
     };
 
     // 최대화 버튼 작동 함수 (전체 화면 10% 확대/축소 토글)
