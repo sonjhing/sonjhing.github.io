@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Developer IDE</title>
+  <title>Developer IDE & Dashboard</title>
   <style>
     :root {
       /* VS Code Dark Theme Colors */
@@ -19,7 +19,8 @@
       --win-bg: #323233;
       --win-text: #ffffff;
       
-      --font-mono: 'Consolas', 'Courier New', monospace;
+      /* 조금 더 현대적이고 깔끔한 영문 폰트 스택으로 변경 */
+      --font-mono: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'Segoe UI', monospace;
     }
 
     * { box-sizing: border-box; }
@@ -27,7 +28,7 @@
     body {
       margin: 0;
       padding: 0;
-      background-color: #0f0f10; /* 바탕화면 느낌의 배경색 */
+      background-color: #0f0f10; 
       color: var(--text-main);
       font-family: var(--font-mono);
       overflow: hidden;
@@ -35,7 +36,112 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
     }
+
+    /* ─── NEW: DASHBOARD & INDEX NAVIGATION ─── */
+    .dashboard-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #121214;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 1;
+      padding: 40px;
+    }
+
+    .dashboard-container.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* 상단 목차 (Navigation) */
+    .index-nav {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto 50px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 20px;
+    }
+
+    .index-logo {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .index-menu {
+      display: flex;
+      gap: 30px;
+    }
+
+    .index-menu-item {
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: color 0.2s;
+      text-decoration: none;
+    }
+
+    .index-menu-item:hover {
+      color: var(--accent);
+    }
+
+    /* 언어 카드 그리드 */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      flex: 1;
+      align-items: center;
+    }
+
+    .lang-card {
+      background: #1c1c1f;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 40px 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .lang-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 20px rgba(0, 122, 204, 0.2);
+    }
+
+    .lang-card .icon {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .lang-card h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.5rem;
+      color: #fff;
+    }
+
+    .lang-card p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+
 
     /* ─── WINDOW FRAME CONTAINER ─── */
     .window-frame {
@@ -49,11 +155,12 @@
       flex-direction: column;
       position: relative;
       overflow: hidden;
-      transition: transform 0.3s ease, opacity 0.3s ease, scale 0.3s ease;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+      z-index: 10;
     }
 
     .window-frame.closed {
-      transform: scale(0.9);
+      transform: scale(0.95) translateY(20px);
       opacity: 0;
       pointer-events: none;
     }
@@ -77,10 +184,6 @@
       gap: 8px;
       font-size: 0.8rem;
       color: #aaaaaa;
-    }
-
-    .titlebar-icon {
-      font-size: 0.9rem;
     }
 
     .titlebar-controls {
@@ -116,7 +219,7 @@
       flex: 1;
       position: relative;
       width: 100%;
-      height: calc(100% - 32px); /* Titlebar 제외 영역 */
+      height: calc(100% - 32px);
     }
 
     /* ─── ANIMATED TAB CONTAINER ─── */
@@ -143,8 +246,8 @@
 
     .tab-btn {
       font-family: var(--font-mono);
-      font-size: 1.2rem;
-      padding: 16px 36px;
+      font-size: 1.1rem;
+      padding: 14px 32px;
       background: #333333;
       color: var(--text-main);
       border: 1px solid var(--border-color);
@@ -159,10 +262,9 @@
       color: #ffffff;
     }
 
-    /* Tabs when in active (top-bar) mode */
     .tab-container.active .tab-btn {
-      font-size: 0.9rem;
-      padding: 8px 24px; /* 창 크기에 맞게 패딩 살짝 조절 */
+      font-size: 0.85rem;
+      padding: 8px 20px; 
       border: none;
       border-right: 1px solid var(--border-color);
       border-radius: 0;
@@ -181,7 +283,7 @@
       top: 0;
       left: 0;
       width: 250px;
-      bottom: 24px; /* above status bar */
+      bottom: 24px;
       background: var(--bg-panel);
       border-right: 1px solid var(--border-color);
       transform: translateX(-100%);
@@ -219,7 +321,7 @@
     /* ─── EDITOR MAIN AREA ─── */
     .editor-main {
       position: absolute;
-      top: 35px; /* tab height 기준 정렬 */
+      top: 35px;
       left: 250px;
       right: 0;
       bottom: 24px;
@@ -235,11 +337,10 @@
       visibility: visible;
     }
     
-    /* Code Viewer Table */
     .code-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       line-height: 1.6;
     }
     
@@ -270,14 +371,14 @@
       color: #d4d4d4;
     }
 
-    /* ─── Syntax Highlighting 색상 강화 ─── */
-    .md-header { color: #4fc1ff; font-weight: bold; } /* 헤더: 밝은 파랑 */
-    .md-bold { color: #e06c75; font-weight: bold; }   /* 강조텍스트: 연한 빨강/핑크 */
-    .md-code { color: #ce9178; background: #252526; padding: 2px 4px; border-radius: 3px; } /* 코드: 인라인 박스 효과 */
-    .md-quote { color: #6a9955; font-style: italic; } /* 인용구: 초록 */
-    .md-link { color: #9cdcfe; text-decoration: underline; } /* 링크: 옥색 */
-    .md-html { color: #6085e6; }                       /* HTML 태그: 진파랑 */
-    .md-err-msg { color: #f48771; }                    /* 에러 메시지: 주황빛 빨강 */
+    /* Syntax Highlighting */
+    .md-header { color: #4fc1ff; font-weight: bold; } 
+    .md-bold { color: #e06c75; font-weight: bold; }   
+    .md-code { color: #ce9178; background: #252526; padding: 2px 4px; border-radius: 3px; } 
+    .md-quote { color: #6a9955; font-style: italic; } 
+    .md-link { color: #9cdcfe; text-decoration: underline; } 
+    .md-html { color: #6085e6; }                       
+    .md-err-msg { color: #f48771; }                    
 
     /* ─── STATUS BAR ─── */
     .statusbar {
@@ -304,32 +405,58 @@
     .status-item {
       cursor: pointer;
     }
-    
-    .status-item:hover {
-      background: rgba(255,255,255,0.1);
-    }
 
     /* 바탕화면 안내 메시지 */
     .bg-hint {
       position: absolute;
       font-size: 0.9rem;
-      color: #555555;
+      color: #333335;
       user-select: none;
       pointer-events: none;
       text-align: center;
+      bottom: 20px;
     }
 
-    /* Responsive adjustments */
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .tab-container.active { left: 0; width: 100%; }
       .editor-main { left: 0; }
+      .card-grid { grid-template-columns: 1fr; gap: 15px; }
     }
   </style>
 </head>
-<body ondblclick="openWindow()">
+<body>
 
-  <div class="bg-hint">창이 닫히면 배경을 더블 클릭하여 다시 여세요.</div>
+  <div class="dashboard-container" id="dashboard">
+    <div class="index-nav">
+      <div class="index-logo">INDEX / DOCS</div>
+      <div class="index-menu">
+        <span class="index-menu-item" onclick="openIdeWithFile('s1py.md', 'btn-py')">Python</span>
+        <span class="index-menu-item" onclick="openIdeWithFile('html.md', 'btn-html')">HTML</span>
+        <span class="index-menu-item" onclick="openIdeWithFile('c.md', 'btn-c') font-mono">C Language</span>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="lang-card" onclick="openIdeWithFile('s1py.md', 'btn-py')">
+        <span class="icon">🐍</span>
+        <h3>Python</h3>
+        <p>s1py.md 파일 열기</p>
+      </div>
+      <div class="lang-card" onclick="openIdeWithFile('html.md', 'btn-html')">
+        <span class="icon">🌐</span>
+        <h3>HTML</h3>
+        <p>html.md 파일 열기</p>
+      </div>
+      <div class="lang-card" onclick="openIdeWithFile('c.md', 'btn-c')">
+        <span class="icon">⚙️</span>
+        <h3>C Language</h3>
+        <p>c.md 파일 열기</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-hint">IDE 창이 닫혔거나 최소화되었을 때 대시보드가 활성화됩니다.</div>
 
   <div class="window-frame" id="window-frame">
     
@@ -339,9 +466,9 @@
         <span class="titlebar-title">Developer IDE - Visual Studio Code</span>
       </div>
       <div class="titlebar-controls">
-        <button class="win-btn" onclick="alert('최소화 기능은 데모 버전에서 지원하지 않습니다.')">─</button>
+        <button class="win-btn" onclick="minimizeWindow()">─</button>
         <button class="win-btn" onclick="alert('최대화 기능은 데모 버전에서 지원하지 않습니다.')">❑</button>
-        <button class="win-btn close-btn" onclick="closeWindow(event)">✕</button>
+        <button class="win-btn close-btn" onclick="closeWindow()">✕</button>
       </div>
     </div>
 
@@ -388,26 +515,33 @@
   <script>
     let isEditorActive = false;
 
-    // 페이지 로드 시 자동으로 s1py.md 실행하도록 설정
+    // 초기 구동 시 s1py.md 자동 로드
     window.onload = function() {
       activateFile('s1py.md', 'btn-py');
     };
 
-    // Window Control Functions
-    function closeWindow(e) {
-      e.stopPropagation(); // body의 더블클릭 이벤트 전파 방지
+    // 최소화 기능 구현: IDE 숨기고 대시보드 표시
+    function minimizeWindow() {
       document.getElementById('window-frame').classList.add('closed');
+      document.getElementById('dashboard').classList.add('active');
     }
 
-    function openWindow() {
+    // 대시보드에서 항목 클릭 시 IDE 복귀 및 파일 전환
+    function openIdeWithFile(filename, btnId) {
+      document.getElementById('dashboard').classList.remove('active');
       document.getElementById('window-frame').classList.remove('closed');
+      activateFile(filename, btnId);
+    }
+
+    // 완전히 창을 닫았을 때 처리
+    function closeWindow() {
+      document.getElementById('window-frame').classList.add('closed');
+      document.getElementById('dashboard').classList.add('active');
     }
 
     function renderMarkdownAsCode(text) {
-      // 1. Escape HTML entities
       let html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       
-      // 2. Syntax Highlighting (정규식 순서 최적화 및 스타일 세분화)
       html = html.replace(/(```[\s\S]*?```)/g, '<span class="md-code">$1</span>');
       html = html.replace(/^(#{1,6}\s+.*)$/gm, '<span class="md-header">$1</span>');
       html = html.replace(/(\*\*.*?\*\*)/g, '<span class="md-bold">$1</span>');
@@ -415,10 +549,8 @@
       html = html.replace(/^(>\s+.*)$/gm, '<span class="md-quote">$1</span>');
       html = html.replace(/(\[.*?\]\(.*?\))/g, '<span class="md-link">$1</span>');
       html = html.replace(/(&lt;\/?[\w\s="'-]+&gt;)/g, '<span class="md-html">$1</span>');
-      // 에러 메시지 가독성을 위한 주석 강조 추가
       html = html.replace(/^(\/\/.*)$/gm, '<span class="md-err-msg">$1</span>');
 
-      // 3. Build line-by-line table
       const lines = html.split('\n');
       let numberedHtml = '<table class="code-table">';
       for (let i = 0; i < lines.length; i++) {
@@ -436,7 +568,6 @@
     async function loadFile(filename) {
       const editorContent = document.getElementById('editor-content');
       document.getElementById('status-filename').textContent = filename;
-      
       editorContent.innerHTML = `<div style="padding: 20px; color: var(--text-dim);">Fetching ${filename}...</div>`;
       
       try {
