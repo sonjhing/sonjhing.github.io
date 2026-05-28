@@ -23,7 +23,7 @@ layout: null
     }
 
     .adv-container {
-        background-color: #e5e5e5;
+        background-color: #fff5f5;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -409,7 +409,7 @@ layout: null
                         <i class="fa-solid fa-caret-left"></i>
                         <i class="fa-solid fa-caret-right"></i>
                     </div>
-                    <div class="slide-index">01<span>/05</span></div>
+                    <div class="slide-index">01<span>/div>
                 </div>
             </footer>
         </main>
