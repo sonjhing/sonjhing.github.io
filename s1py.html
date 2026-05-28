@@ -3,7 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Developer IDE & Dashboard</title>
+  <title>Developer IDE</title>
+  <!-- Load high-legibility web fonts as fallbacks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Load Pretendard -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+
   <style>
     :root {
       /* VS Code Dark Theme Colors */
@@ -15,12 +22,9 @@
       --text-main: #cccccc;
       --text-dim: #858585;
       
-      /* Windows Titlebar Colors */
-      --win-bg: #323233;
-      --win-text: #ffffff;
-      
-      /* 깔끔하고 모던한 영문 폰트 스택 */
-      --font-mono: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'Segoe UI', monospace;
+      /* Task 2: Advanced Typography Stack */
+      --font-ui: 'SF Pro Display', 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-code: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Pretendard', 'Noto Sans KR', monospace;
     }
 
     * { box-sizing: border-box; }
@@ -28,199 +32,19 @@
     body {
       margin: 0;
       padding: 0;
-      background-color: #0f0f10; 
-      color: var(--text-main);
-      font-family: var(--font-mono);
-      overflow: hidden;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      /* 최대화 애니메이션을 위한 body 트랜지션 */
-      transition: transform 0.3s ease;
-    }
-
-    /* ─── DASHBOARD & INDEX NAVIGATION ─── */
-    .dashboard-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background-color: #121214;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-      z-index: 1;
-      padding: 40px;
-    }
-
-    .dashboard-container.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    /* 상단 목차 (Navigation) */
-    .index-nav {
-      width: 100%;
-      max-width: 1000px;
-      margin: 0 auto 50px auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 20px;
-    }
-
-    .index-logo {
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: #fff;
-    }
-
-    .index-menu {
-      display: flex;
-      gap: 30px;
-    }
-
-    .index-menu-item {
-      color: var(--text-dim);
-      cursor: pointer;
-      font-size: 1rem;
-      transition: color 0.2s;
-      text-decoration: none;
-    }
-
-    .index-menu-item:hover {
-      color: var(--accent);
-    }
-
-    /* 언어 카드 그리드 */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 30px;
-      width: 100%;
-      max-width: 1000px;
-      margin: 0 auto;
-      flex: 1;
-      align-items: center;
-    }
-
-    .lang-card {
-      background: #1c1c1f;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 40px 30px;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .lang-card:hover {
-      transform: translateY(-8px);
-      border-color: var(--accent);
-      box-shadow: 0 10px 20px rgba(0, 122, 204, 0.2);
-    }
-
-    .lang-card .icon {
-      font-size: 3.5rem;
-      margin-bottom: 20px;
-      display: block;
-    }
-
-    .lang-card h3 {
-      margin: 0 0 10px 0;
-      font-size: 1.5rem;
-      color: #fff;
-    }
-
-    .lang-card p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: var(--text-dim);
-    }
-
-    /* ─── WINDOW FRAME CONTAINER ─── */
-    .window-frame {
-      width: 90vw;
-      height: 85vh;
       background-color: var(--bg-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
-      z-index: 10;
-    }
-
-    .window-frame.closed {
-      transform: scale(0.95) translateY(20px);
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* ─── WINDOW TITLEBAR ─── */
-    .titlebar {
-      height: 32px;
-      background-color: var(--win-bg);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 12px;
-      user-select: none;
-      border-bottom: 1px solid var(--border-color);
-      z-index: 30;
-    }
-
-    .titlebar-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      color: #aaaaaa;
-    }
-
-    .titlebar-controls {
-      display: flex;
-      height: 100%;
-    }
-
-    .win-btn {
-      width: 46px;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: transparent;
-      border: none;
-      color: var(--win-text);
-      font-size: 0.75rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .win-btn:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .win-btn.close-btn:hover {
-      background-color: #e81123;
-      color: #fff;
-    }
-
-    /* ─── WINDOW CONTENT AREA ─── */
-    .window-content {
-      flex: 1;
-      position: relative;
-      width: 100%;
-      height: calc(100% - 32px);
+      color: var(--text-main);
+      
+      /* Global Font Rendering Optimization */
+      font-family: var(--font-ui);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      letter-spacing: -0.02em;
+      line-height: 1.7;
+      
+      overflow: hidden; /* No scroll on body, scroll inside editor */
+      height: 100vh;
     }
 
     /* ─── ANIMATED TAB CONTAINER ─── */
@@ -246,9 +70,9 @@
     }
 
     .tab-btn {
-      font-family: var(--font-mono);
-      font-size: 1.1rem;
-      padding: 14px 32px;
+      font-family: var(--font-ui);
+      font-size: 1.2rem;
+      padding: 16px 36px;
       background: #333333;
       color: var(--text-main);
       border: 1px solid var(--border-color);
@@ -256,6 +80,7 @@
       cursor: pointer;
       outline: none;
       transition: all 0.3s ease;
+      letter-spacing: -0.01em;
     }
     
     .tab-btn:hover {
@@ -263,9 +88,10 @@
       color: #ffffff;
     }
 
+    /* Tabs when in active (top-bar) mode */
     .tab-container.active .tab-btn {
-      font-size: 0.85rem;
-      padding: 8px 20px; 
+      font-size: 0.9rem;
+      padding: 10px 24px;
       border: none;
       border-right: 1px solid var(--border-color);
       border-radius: 0;
@@ -301,6 +127,7 @@
       padding: 12px 20px;
       color: var(--text-dim);
       letter-spacing: 1px;
+      font-weight: 600;
     }
     
     .file-item {
@@ -315,14 +142,14 @@
     .file-item:hover { background: #2a2d2e; color: #fff; }
     .file-item.selected { background: #37373d; color: #fff; }
     
-    .file-icon-py { color: #3572A5; }
-    .file-icon-html { color: #e34c26; }
-    .file-icon-c { color: #a8b9cc; }
+    .file-icon-py { color: #3572A5; font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif; }
+    .file-icon-html { color: #e34c26; font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif; }
+    .file-icon-c { color: #555555; font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif; }
 
     /* ─── EDITOR MAIN AREA ─── */
     .editor-main {
       position: absolute;
-      top: 35px;
+      top: 38px;
       left: 250px;
       right: 0;
       bottom: 24px;
@@ -338,17 +165,19 @@
       visibility: visible;
     }
     
+    /* Code Viewer Table - Optimized for crisp text rendering */
     .code-table {
       width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-      line-height: 1.6;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-family: var(--font-code);
+      font-size: 14.5px;
+      line-height: 1.7;
     }
     
     .line-row:hover {
-      background-color: rgba(255, 255, 255, 0.03);
+      background: rgba(255,255,255,0.02);
     }
-
     .line-row:hover .line-number {
       color: #c6c6c6;
     }
@@ -356,6 +185,7 @@
     .line-number {
       width: 50px;
       min-width: 50px;
+      max-width: 50px;
       text-align: right;
       padding-right: 16px;
       color: #6e7681;
@@ -363,6 +193,8 @@
       vertical-align: top;
       background: var(--bg-dark);
       border-right: 1px solid var(--border-color);
+      /* Prevent subpixel blurring on borders */
+      transform: translateZ(0); 
     }
     
     .line-content {
@@ -373,13 +205,12 @@
     }
 
     /* Syntax Highlighting */
-    .md-header { color: #4fc1ff; font-weight: bold; } 
-    .md-bold { color: #e06c75; font-weight: bold; }   
-    .md-code { color: #ce9178; background: #252526; padding: 2px 4px; border-radius: 3px; } 
-    .md-quote { color: #6a9955; font-style: italic; } 
-    .md-link { color: #9cdcfe; text-decoration: underline; } 
-    .md-html { color: #6085e6; }                       
-    .md-err-msg { color: #f48771; }                    
+    .md-header { color: #569cd6; font-weight: 600; }
+    .md-bold { color: #4fc1ff; font-weight: 600; }
+    .md-code { color: #ce9178; }
+    .md-quote { color: #6a9955; font-style: italic; }
+    .md-link { color: #dcdcaa; text-decoration: underline; }
+    .md-html { color: #808080; }
 
     /* ─── STATUS BAR ─── */
     .statusbar {
@@ -406,165 +237,90 @@
     .status-item {
       cursor: pointer;
     }
-
-    /* 바탕화면 안내 메시지 */
-    .bg-hint {
-      position: absolute;
-      font-size: 0.9rem;
-      color: #333335;
-      user-select: none;
-      pointer-events: none;
-      text-align: center;
-      bottom: 20px;
+    
+    .status-item:hover {
+      background: rgba(255,255,255,0.1);
     }
 
+    /* Responsive adjustments */
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .tab-container.active { left: 0; width: 100%; }
       .editor-main { left: 0; }
-      .card-grid { grid-template-columns: 1fr; gap: 15px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="dashboard-container" id="dashboard">
-    <div class="index-nav">
-      <div class="index-logo">Skills</div>
-      <div class="index-menu">
-        <span class="index-menu-item" onclick="openIdeWithFile('s2py.md', 'btn-py')">Python</span>
-        <span class="index-menu-item" onclick="openIdeWithFile('html.md', 'btn-html')">HTML</span>
-        <span class="index-menu-item" onclick="openIdeWithFile('c.md', 'btn-c')">C Language</span>
-      </div>
-    </div>
+  <!-- Animated Tabs -->
+  <div class="tab-container" id="tab-container">
+    <button class="tab-btn" id="btn-py" onclick="activateFile('s2py.md', 'btn-py')">Python</button>
+    <button class="tab-btn" id="btn-html" onclick="activateFile('html.md', 'btn-html')">HTML</button>
+    <button class="tab-btn" id="btn-c" onclick="activateFile('c.md', 'btn-c')">C언어</button>
+  </div>
 
-    <div class="card-grid">
-      <div class="lang-card" onclick="openIdeWithFile('s2py.md', 'btn-py')">
-        <span class="icon">🐍</span>
-        <h3>Python</h3>
-        <p>s2py.md 파일 열기</p>
-      </div>
-      <div class="lang-card" onclick="openIdeWithFile('html.md', 'btn-html')">
-        <span class="icon">🌐</span>
-        <h3>HTML</h3>
-        <p>html.md 파일 열기</p>
-      </div>
-      <div class="lang-card" onclick="openIdeWithFile('c.md', 'btn-c')">
-        <span class="icon">⚙️</span>
-        <h3>C Language</h3>
-        <p>c.md 파일 열기</p>
-      </div>
+  <!-- Sidebar / Explorer -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">EXPLORER</div>
+    <div class="file-item selected" id="file-py2" onclick="activateFile('s2py.md', 'btn-py')">
+      <span class="file-icon-py">🚀</span> s2py.md
+    </div>
+    <div class="file-item" id="file-py" onclick="activateFile('s1py.md', 'btn-py')">
+      <span class="file-icon-py">🐍</span> s1py.md
+    </div>
+    <div class="file-item" id="file-html" onclick="activateFile('html.md', 'btn-html')">
+      <span class="file-icon-html">🌐</span> html.md
+    </div>
+    <div class="file-item" id="file-c" onclick="activateFile('c.md', 'btn-c')">
+      <span class="file-icon-c">⚙️</span> c.md
     </div>
   </div>
 
-  <div class="bg-hint">IDE 창이 최소화되었을 때 인덱스 대시보드가 활성화됩니다.</div>
-
-  <div class="window-frame" id="window-frame">
-    
-    <div class="titlebar">
-      <div class="titlebar-info">
-        <span class="titlebar-icon">💻</span>
-        <span class="titlebar-title">Developer IDE - Visual Studio Code</span>
-      </div>
-      <div class="titlebar-controls">
-        <button class="win-btn" onclick="minimizeWindow()">─</button>
-        <button class="win-btn" id="max-btn" onclick="toggleMaximize()">❑</button>
-        <button class="win-btn close-btn" onclick="closeWindow()">✕</button>
-      </div>
+  <!-- Editor Output Area -->
+  <div class="editor-main" id="editor-main">
+    <div id="editor-content">
+      <!-- Generated code table goes here -->
     </div>
+  </div>
 
-    <div class="window-content">
-      <div class="tab-container" id="tab-container">
-        <button class="tab-btn" id="btn-py" onclick="activateFile('s2py.md', 'btn-py')">Python</button>
-        <button class="tab-btn" id="btn-html" onclick="activateFile('html.md', 'btn-html')">HTML</button>
-        <button class="tab-btn" id="btn-c" onclick="activateFile('c.md', 'btn-c')">C언어</button>
-      </div>
+  <!-- Status Bar -->
+  <div class="statusbar">
+    <div class="status-left">
+      <span class="status-item">main*</span>
+      <span class="status-item" id="status-filename">s2py.md</span>
+    </div>
+    <div class="status-right">
+      <span class="status-item">Ln <span id="status-lines">0</span>, Col 1</span>
+      <span class="status-item">Spaces: 4</span>
+      <span class="status-item">UTF-8</span>
+      <span class="status-item">Markdown</span>
+    </div>
+  </div>
 
-      <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">EXPLORER</div>
-        <div class="file-item" id="file-py" onclick="activateFile('s2py.md', 'btn-py')">
-          <span class="file-icon-py">🐍</span> s2py.md
-        </div>
-        <div class="file-item" id="file-html" onclick="activateFile('html.md', 'btn-html')">
-          <span class="file-icon-html">🌐</span> html.md
-        </div>
-        <div class="file-item" id="file-c" onclick="activateFile('c.md', 'btn-c')">
-          <span class="file-icon-c">⚙️</span> c.md
-        </div>
-      </div>
-
-      <div class="editor-main" id="editor-main">
-        <div id="editor-content"></div>
-      </div>
-
-      <div class="statusbar">
-        <div class="status-left">
-          <span class="status-item">main*</span>
-          <span class="status-item" id="status-filename">s2py.md</span>
-        </div>
-        <div class="status-right">
-          <span class="status-item">Ln <span id="status-lines">0</span>, Col 1</span>
-          <span class="status-item">Spaces: 2</span>
-          <span class="status-item">UTF-8</span>
-          <span class="status-item">Markdown</span>
-        </div>
-      </div>
-    </div> </div> <script>
+  <script>
     let isEditorActive = false;
-    let isMaximized = false; // 최대화 토글 상태 체크 변수
-
-    // 초기 구동 시 s1py.md 자동 로드
-    window.onload = function() {
-      activateFile('s2py.md', 'btn-py');
-    };
-
-    // 최대화 버튼 작동 함수 (전체 화면 10% 확대/축소 토글)
-    function toggleMaximize() {
-      const body = document.body;
-      const maxBtn = document.getElementById('max-btn');
-      
-      if (!isMaximized) {
-        body.style.transform = "scale(1.1)";
-        maxBtn.textContent = "❐"; // 창 복원 아이콘으로 변경
-        isMaximized = true;
-      } else {
-        body.style.transform = "scale(1)";
-        maxBtn.textContent = "❑"; // 기본 최대화 아이콘으로 변경
-        isMaximized = false;
-      }
-    }
-
-    // 최소화 기능 구현: IDE 숨기고 대시보드 표시
-    function minimizeWindow() {
-      document.getElementById('window-frame').classList.add('closed');
-      document.getElementById('dashboard').classList.add('active');
-    }
-
-    // 대시보드에서 항목 클릭 시 IDE 복귀 및 파일 전환
-    function openIdeWithFile(filename, btnId) {
-      document.getElementById('dashboard').classList.remove('active');
-      document.getElementById('window-frame').classList.remove('closed');
-      activateFile(filename, btnId);
-    }
-
-    // 완전히 창을 닫았을 때 처리
-    function closeWindow() {
-      document.getElementById('window-frame').classList.add('closed');
-      document.getElementById('dashboard').classList.add('active');
-    }
 
     function renderMarkdownAsCode(text) {
+      // 1. Escape HTML entities
       let html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       
+      // 2. Syntax Highlighting
+      // Code blocks (multiline)
       html = html.replace(/(```[\s\S]*?```)/g, '<span class="md-code">$1</span>');
+      // Headers
       html = html.replace(/^(#{1,6}\s+.*)$/gm, '<span class="md-header">$1</span>');
+      // Bold
       html = html.replace(/(\*\*.*?\*\*)/g, '<span class="md-bold">$1</span>');
+      // Inline code
       html = html.replace(/(`[^`\n]+`)/g, '<span class="md-code">$1</span>');
+      // Blockquotes
       html = html.replace(/^(>\s+.*)$/gm, '<span class="md-quote">$1</span>');
+      // Links
       html = html.replace(/(\[.*?\]\(.*?\))/g, '<span class="md-link">$1</span>');
+      // HTML tags (escaped earlier, so we target &lt;...&gt;)
       html = html.replace(/(&lt;\/?[\w\s="'-]+&gt;)/g, '<span class="md-html">$1</span>');
-      html = html.replace(/^(\/\/.*)$/gm, '<span class="md-err-msg">$1</span>');
 
+      // 3. Build line-by-line table
       const lines = html.split('\n');
       let numberedHtml = '<table class="code-table">';
       for (let i = 0; i < lines.length; i++) {
@@ -582,7 +338,8 @@
     async function loadFile(filename) {
       const editorContent = document.getElementById('editor-content');
       document.getElementById('status-filename').textContent = filename;
-      editorContent.innerHTML = `<div style="padding: 20px; color: var(--text-dim);">Fetching ${filename}...</div>`;
+      
+      editorContent.innerHTML = `<div style="padding: 20px; color: var(--text-dim); font-family: var(--font-ui);">Fetching ${filename}...</div>`;
       
       try {
         const res = await fetch(filename);
@@ -600,10 +357,12 @@
     }
 
     function activateFile(filename, btnId) {
+      // Trigger layout transition if not already active
       if (!isEditorActive) {
         document.getElementById('tab-container').classList.add('active');
         document.getElementById('sidebar').classList.add('active');
         
+        // Slight delay for editor content to fade in smoothly
         setTimeout(() => {
           document.getElementById('editor-main').classList.add('active');
         }, 300);
@@ -611,14 +370,24 @@
         isEditorActive = true;
       }
 
+      // Update Tab active state
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       const activeBtn = document.getElementById(btnId);
       if (activeBtn) activeBtn.classList.add('active');
 
+      // Update Sidebar active state
       document.querySelectorAll('.file-item').forEach(item => item.classList.remove('selected'));
-      const sidebarItem = document.getElementById('file-' + btnId.replace('btn-', ''));
+      // Sidebar selection logic based on filename for precise matching
+      let sidebarId = '';
+      if (filename === 's2py.md') sidebarId = 'file-py2';
+      else if (filename === 's1py.md') sidebarId = 'file-py';
+      else if (filename === 'html.md') sidebarId = 'file-html';
+      else if (filename === 'c.md') sidebarId = 'file-c';
+
+      const sidebarItem = document.getElementById(sidebarId);
       if (sidebarItem) sidebarItem.classList.add('selected');
 
+      // Load file content
       loadFile(filename);
     }
   </script>
