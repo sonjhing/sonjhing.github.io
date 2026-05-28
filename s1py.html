@@ -214,7 +214,7 @@
     
     .file-icon-py { color: #3572A5; }
     .file-icon-html { color: #e34c26; }
-    .file-icon-c { color: #555555; }
+    .file-icon-c { color: #a8b9cc; }
 
     /* ─── EDITOR MAIN AREA ─── */
     .editor-main {
@@ -243,6 +243,10 @@
       line-height: 1.6;
     }
     
+    .line-row:hover {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
     .line-row:hover .line-number {
       color: #c6c6c6;
     }
@@ -266,13 +270,14 @@
       color: #d4d4d4;
     }
 
-    /* Syntax Highlighting */
-    .md-header { color: #569cd6; font-weight: bold; }
-    .md-bold { color: #4fc1ff; font-weight: bold; }
-    .md-code { color: #ce9178; }
-    .md-quote { color: #6a9955; font-style: italic; }
-    .md-link { color: #dcdcaa; text-decoration: underline; }
-    .md-html { color: #808080; }
+    /* ─── Syntax Highlighting 색상 강화 ─── */
+    .md-header { color: #4fc1ff; font-weight: bold; } /* 헤더: 밝은 파랑 */
+    .md-bold { color: #e06c75; font-weight: bold; }   /* 강조텍스트: 연한 빨강/핑크 */
+    .md-code { color: #ce9178; background: #252526; padding: 2px 4px; border-radius: 3px; } /* 코드: 인라인 박스 효과 */
+    .md-quote { color: #6a9955; font-style: italic; } /* 인용구: 초록 */
+    .md-link { color: #9cdcfe; text-decoration: underline; } /* 링크: 옥색 */
+    .md-html { color: #6085e6; }                       /* HTML 태그: 진파랑 */
+    .md-err-msg { color: #f48771; }                    /* 에러 메시지: 주황빛 빨강 */
 
     /* ─── STATUS BAR ─── */
     .statusbar {
@@ -349,7 +354,7 @@
 
       <div class="sidebar" id="sidebar">
         <div class="sidebar-header">EXPLORER</div>
-        <div class="file-item selected" id="file-py" onclick="activateFile('s1py.md', 'btn-py')">
+        <div class="file-item" id="file-py" onclick="activateFile('s1py.md', 'btn-py')">
           <span class="file-icon-py">🐍</span> s1py.md
         </div>
         <div class="file-item" id="file-html" onclick="activateFile('html.md', 'btn-html')">
@@ -361,8 +366,7 @@
       </div>
 
       <div class="editor-main" id="editor-main">
-        <div id="editor-content">
-          </div>
+        <div id="editor-content"></div>
       </div>
 
       <div class="statusbar">
@@ -384,6 +388,11 @@
   <script>
     let isEditorActive = false;
 
+    // 페이지 로드 시 자동으로 s1py.md 실행하도록 설정
+    window.onload = function() {
+      activateFile('s1py.md', 'btn-py');
+    };
+
     // Window Control Functions
     function closeWindow(e) {
       e.stopPropagation(); // body의 더블클릭 이벤트 전파 방지
@@ -398,7 +407,7 @@
       // 1. Escape HTML entities
       let html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       
-      // 2. Syntax Highlighting
+      // 2. Syntax Highlighting (정규식 순서 최적화 및 스타일 세분화)
       html = html.replace(/(```[\s\S]*?```)/g, '<span class="md-code">$1</span>');
       html = html.replace(/^(#{1,6}\s+.*)$/gm, '<span class="md-header">$1</span>');
       html = html.replace(/(\*\*.*?\*\*)/g, '<span class="md-bold">$1</span>');
@@ -406,6 +415,8 @@
       html = html.replace(/^(>\s+.*)$/gm, '<span class="md-quote">$1</span>');
       html = html.replace(/(\[.*?\]\(.*?\))/g, '<span class="md-link">$1</span>');
       html = html.replace(/(&lt;\/?[\w\s="'-]+&gt;)/g, '<span class="md-html">$1</span>');
+      // 에러 메시지 가독성을 위한 주석 강조 추가
+      html = html.replace(/^(\/\/.*)$/gm, '<span class="md-err-msg">$1</span>');
 
       // 3. Build line-by-line table
       const lines = html.split('\n');
