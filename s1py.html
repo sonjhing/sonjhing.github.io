@@ -70,23 +70,50 @@
     }
 
     .tab-btn {
+      position: relative;
       font-family: var(--font-ui);
       font-size: 1.2rem;
       padding: 16px 36px;
-      background: #333333;
+      background: linear-gradient(145deg, #2a2a2a, #333333);
       color: var(--text-main);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
+      border: 1px solid #4a4a4a;
+      border-radius: 8px;
       cursor: pointer;
       outline: none;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
       letter-spacing: -0.01em;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      overflow: hidden;
     }
     
-    .tab-btn:hover {
-      background: #444444;
-      color: #ffffff;
+    /* Subtle accent line on hover */
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
+
+    .tab-btn:hover {
+      background: linear-gradient(145deg, #333333, #3f3f3f);
+      color: #ffffff;
+      border-color: #666;
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+    
+    .tab-btn:hover::after {
+      opacity: 1;
+      box-shadow: 0 -2px 10px var(--accent);
+    }
+    
+    /* Unique subtle colors for each button */
+    #btn-py:hover::after { background: #3572A5; box-shadow: 0 -2px 12px rgba(53, 114, 165, 0.6); }
+    #btn-html:hover::after { background: #e34c26; box-shadow: 0 -2px 12px rgba(227, 76, 38, 0.6); }
+    #btn-c:hover::after { background: #00ffff; box-shadow: 0 -2px 12px rgba(0, 255, 255, 0.4); }
 
     /* Tabs when in active (top-bar) mode */
     .tab-container.active .tab-btn {
@@ -96,6 +123,12 @@
       border-right: 1px solid var(--border-color);
       border-radius: 0;
       background: var(--bg-tab);
+      box-shadow: none;
+      transform: none;
+    }
+    
+    .tab-container.active .tab-btn::after {
+      display: none; /* Hide hover line in IDE mode */
     }
     
     .tab-container.active .tab-btn.active {
