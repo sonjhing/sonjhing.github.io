@@ -2,263 +2,451 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>Smart City Simulation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart City Advanced 3D Simulation</title>
 
 <style>
-
 /* ======================
-   SMOOTH SCROLL (강화)
+   RESET & SMOOTH SCROLL
 ====================== */
-  <!-- HERO START SCREEN -->
-<div class="hero">
-  <div class="hero-inner">
-    <h1>SMART CITY SYSTEM</h1>
-    <p>Subway Crowd Simulation · Autonomous Drone Navigation</p>
-
-    <div class="scroll-hint">↓ SCROLL TO EXPLORE ↓</div>
-  </div>
-</div>
 html {
   scroll-behavior: smooth;
   scroll-snap-type: y mandatory;
   overflow-y: scroll;
 }
 
-section {
-  height:100vh;
-  scroll-snap-align: start;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-}
-
-/* ======================
-   BASE
-====================== */
 body {
-  margin:0;
-  background:#020617;
-  color:white;
-  font-family:sans-serif;
+  margin: 0;
+  background: #020617;
+  color: white;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+section {
+  height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  box-sizing: border-box;
 }
 
 /* ======================
-   HERO
+   HERO SCREEN (스크롤 트랜지션 효과 추가)
 ====================== */
 .hero {
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  scroll-snap-align: start;
+  background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+  text-align: center;
+  position: relative;
+  
+  /* [핵심 추가] 스크롤 시 내부 콘텐츠가 3D 공간으로 밀려나도록 원근감 부여 */
+  perspective: 1000px;
+  perspective-origin: center;
+}
+
+/* 스크롤 연동 애니메이션을 적용할 텍스트 컨테이너 */
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  /* Modern CSS: 스크롤 영역에 반응하여 3D 줌아웃+페이드아웃 처리 */
+  animation: heroScrollOut linear both;
+  animation-timeline: scroll(root);
+  animation-range: exit;
 }
 
 .hero h1 {
-  color:#00e5ff;
-  font-size:52px;
+  color: #00e5ff;
+  font-size: 64px;
+  letter-spacing: 4px;
+  margin: 0 0 10px 0;
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
+  animation: pulse 2s infinite alternate;
+}
+
+.hero p {
+  color: #94a3b8;
+  font-size: 20px;
+  margin: 0 0 50px 0;
+}
+
+.scroll-hint {
+  color: #00e5ff;
+  animation: bounce 2s infinite;
+  font-weight: bold;
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+
+/* [스크롤 애니메이션 정의] 아래로 내릴수록 깊숙이 멀어지며 사라짐 */
+@keyframes heroScrollOut {
+  to {
+    transform: translateZ(-300px) translateY(-50px);
+    opacity: 0;
+    filter: blur(5px);
+  }
+}
+
+@keyframes pulse {
+  from { text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); }
+  to { text-shadow: 0 0 30px rgba(0, 229, 255, 0.9), 0 0 50px rgba(0, 229, 255, 0.4); }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: #f8fafc;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  letter-spacing: 1px;
 }
 
 /* ======================
-   SUBWAY
+   SUBWAY STATION (배경 고정, 내부 3D 연출)
 ====================== */
 .subway {
-  width:500px;
-  height:300px;
-  background:#0b1633;
-  border-radius:20px;
-  position:relative;
-  overflow:hidden;
-  border:1px solid #1f3b6d;
-  transition:1s;
+  width: 800px;
+  height: 450px;
+  background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #1e293b;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  transition: background 0.8s ease, border-color 0.5s, box-shadow 0.5s;
+  perspective: 1000px;
 }
 
-.low { background:#064e3b; }
-.mid { background:#854d0e; }
-.high { background:#7f1d1d; }
+.subway.low { border-color: #10b981; box-shadow: 0 0 30px rgba(16, 185, 129, 0.2); }
+.subway.mid { border-color: #f59e0b; box-shadow: 0 0 30px rgba(245, 158, 11, 0.2); }
+.subway.high { border-color: #ef4444; box-shadow: 0 0 40px rgba(239, 68, 68, 0.4); }
+
+.subway::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 100% 20px;
+  pointer-events: none;
+}
 
 .dot {
-  width:6px;
-  height:6px;
-  background:#00e5ff;
-  border-radius:50%;
-  position:absolute;
-  animation: float 6s linear forwards;
+  width: 8px;
+  height: 8px;
+  background: #00e5ff;
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: 0 0 12px #00e5ff, 0 0 20px #00e5ff;
+  animation: floatDown 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  pointer-events: none;
 }
 
-@keyframes float {
-  0% { transform:translateY(-10px); }
-  100% { transform:translateY(320px); opacity:0; }
+@keyframes floatDown {
+  0% { transform: translateY(-20px) translateZ(80px) rotateX(-15deg); opacity: 0; scale: 1.8; }
+  15% { opacity: 1; scale: 1; }
+  100% { transform: translateY(470px) translateZ(0px) rotateX(0deg); opacity: 0; }
+}
+
+.train {
+  position: absolute;
+  bottom: 40px;
+  left: -250px;
+  width: 240px;
+  height: 70px;
+  background: linear-gradient(90deg, #334155, #cbd5e1, #64748b);
+  border-radius: 12px;
+  box-shadow: 0 20px 30px rgba(0,0,0,0.7);
+  animation: trainMove 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform: translateZ(40px) rotateY(-15deg); 
+}
+
+.train::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 210px;
+  height: 22px;
+  background: repeating-linear-gradient(
+    90deg,
+    #00e5ff 0px,
+    #00e5ff 25px,
+    transparent 25px,
+    transparent 38px
+  );
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.8);
+  border-radius: 4px;
+}
+
+.train::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 30px;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #fff, 0 0 40px #00e5ff, 0 0 60px #00e5ff;
+}
+
+@keyframes trainMove {
+  0% { left: -260px; }
+  40%, 60% { left: 280px; }
+  100% { left: 850px; }
 }
 
 /* ======================
-   MAP (DRONE)
+   3D DRONE MAP
 ====================== */
+.map-container {
+  perspective: 1500px;
+  padding: 20px;
+}
+
 .map {
-  width:700px;
-  height:400px;
-  position:relative;
-  border-radius:20px;
-  overflow:hidden;
-  border:1px solid #1f3b6d;
+  width: 800px;
+  height: 500px;
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 2px solid #334155;
+  background: #020617;
+  transform: rotateX(55deg) rotateZ(-15deg);
+  transform-style: preserve-3d;
+  box-shadow: 0 50px 100px rgba(0,0,0,0.8), 0 0 50px rgba(14, 165, 233, 0.1);
+  transition: transform 0.5s ease;
 }
 
-/* LAND */
+.map:hover {
+  transform: rotateX(50deg) rotateZ(-10deg);
+}
+
+.map::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
 .land {
-  position:absolute;
-  width:100%;
-  height:60%;
-  background:#14532d;
-  top:0;
+  position: absolute;
+  width: 100%;
+  height: 55%;
+  background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+  top: 0;
+  border-bottom: 3px solid #10b981;
 }
 
-/* WATER */
 .water {
-  position:absolute;
-  width:100%;
-  height:40%;
-  bottom:0;
-  background:#0ea5e9;
-  opacity:0.3;
+  position: absolute;
+  width: 100%;
+  height: 45%;
+  bottom: 0;
+  background: linear-gradient(180deg, #0c4a6e 0%, #0369a1 100%);
+  overflow: hidden;
 }
 
-/* DRONE */
+.water::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%; left: -50%;
+  background: radial-gradient(circle, rgba(14,211,233,0.1) 0%, transparent 60%);
+  animation: oceanMove 10s linear infinite;
+}
+
+@keyframes oceanMove {
+  100% { transform: rotate(360deg); }
+}
+
 .drone {
-  width:20px;
-  height:20px;
-  background:#00e5ff;
-  border-radius:50%;
-  position:absolute;
-  box-shadow:0 0 15px #00e5ff;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  transform: translateZ(60px); 
+  transform-style: preserve-3d;
+  box-shadow: 0 40px 20px rgba(0,0,0,0.5); 
 }
 
+.drone::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border: 2px dashed #00e5ff;
+  border-radius: 50%;
+  animation: spin 0.5s linear infinite;
+  box-shadow: 0 0 15px #00e5ff;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+.trail-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #00e5ff;
+  border-radius: 50%;
+  opacity: 0.8;
+  pointer-events: none;
+  transform: translateZ(55px);
+  box-shadow: 0 0 8px #00e5ff;
+  animation: fadeOut 0.8s forwards;
+}
+
+@keyframes fadeOut {
+  100% { opacity: 0; scale: 0.1; }
+}
+
+.click-hint {
+  margin-top: 15px;
+  color: #64748b;
+  font-size: 14px;
+}
 </style>
 </head>
-
 <body>
 
-<!-- HERO -->
 <div class="hero">
-  <h1>SMART CITY CONTROL SYSTEM</h1>
-  <p>Subway Crowd Simulation + Autonomous Drone Navigation</p>
+  <div class="hero-content">
+    <h1>SMART CITY SYSTEM</h1>
+    <p>Subway Crowd Simulation · Air Surf Drone</p>
+    <div class="scroll-hint">↓ SCROLL TO EXPLORE ↓</div>
+  </div>
 </div>
 
-<!-- SUBWAY -->
 <section>
-  <h2>🚇 SUBWAY CROWD SYSTEM</h2>
-  <div class="subway low" id="subway"></div>
+  <h2>🚇 SUBWAY CROWD MONITOR</h2>
+  <div class="subway low" id="subway">
+    <div class="train"></div>
+  </div>
+  <div class="click-hint">화면을 클릭하면 승객 유입량이 급격히 증가합니다.</div>
 </section>
 
-<!-- DRONE -->
 <section>
-  <h2>🚁 DRONE NAVIGATION MAP</h2>
-
-  <div class="map" id="map">
-    <div class="land"></div>
-    <div class="water"></div>
-    <div class="drone" id="drone"></div>
+  <h2>🚁 Air Surf Drone</h2>
+  <div class="map-container">
+    <div class="map" id="map">
+      <div class="land"></div>
+      <div class="water"></div>
+      <div class="drone" id="drone"></div>
+    </div>
   </div>
-
+  <div class="click-hint">드론은 실시간 지형(육지/해양)을 감지하여 비행 속도를 가변 제어합니다.</div>
 </section>
 
 <script>
-
 /* ======================
-   SUBWAY SYSTEM
+   SUBWAY SYSTEM (JS)
 ====================== */
-let subway = document.getElementById("subway");
+const subway = document.getElementById("subway");
 let crowd = 0;
 
-function updateColor(){
-  subway.classList.remove("low","mid","high");
-
-  if(crowd < 10) subway.classList.add("low");
-  else if(crowd < 25) subway.classList.add("mid");
-  else subway.classList.add("high");
+function updateColor() {
+  subway.classList.remove("low", "mid", "high");
+  if (crowd < 12) {
+    subway.classList.add("low");
+  } else if (crowd < 28) {
+    subway.classList.add("mid");
+  } else {
+    subway.classList.add("high");
+  }
 }
 
-function createDot(){
-
+function createDot() {
   let d = document.createElement("div");
   d.className = "dot";
-
-  d.style.left = Math.random()*500 + "px";
+  d.style.left = (Math.random() * 740 + 30) + "px";
   d.style.top = "-10px";
-
+  
   subway.appendChild(d);
-
-  setTimeout(()=>d.remove(), 6000);
+  setTimeout(() => d.remove(), 4000);
 }
 
-/* 자연 생성 (idle = 약한 혼잡) */
 setInterval(() => {
   createDot();
-
-  if(crowd > 0) crowd -= 1;
-
+  if (crowd > 0) crowd -= 1;
   updateColor();
+}, 350);
 
-}, 400);
-
-/* 클릭 = 급격 증가 */
 subway.addEventListener("click", () => {
-
-  for(let i=0;i<5;i++){
-    createDot();
+  for (let i = 0; i < 8; i++) {
+    setTimeout(createDot, i * 50);
   }
-
-  crowd += 5;
+  crowd += 8;
   updateColor();
-
 });
 
+
 /* ======================
-   DRONE SYSTEM
+   DRONE SYSTEM WITH TRAIL (JS)
 ====================== */
-let drone = document.getElementById("drone");
-let map = document.getElementById("map");
+const drone = document.getElementById("drone");
+const map = document.getElementById("map");
 
-let x = 100;
-let y = 100;
+let x = 150;
+let y = 150;
+let tx = 600;
+let ty = 150;
 
-/* path target */
-let tx = 500;
-let ty = 200;
+function createTrail(tx, ty) {
+  const trail = document.createElement("div");
+  trail.className = "trail-dot";
+  trail.style.left = tx + 9 + "px"; 
+  trail.style.top = ty + 9 + "px";
+  map.appendChild(trail);
+  setTimeout(() => trail.remove(), 800);
+}
 
-/* 이동 속도 */
-function moveDrone(){
-
-  // 방향 계산
+function moveDrone() {
   let dx = tx - x;
   let dy = ty - y;
 
-  x += dx * 0.02;
-  y += dy * 0.02;
+  let isWater = y > (500 * 0.55);
+  let easing = isWater ? 0.015 : 0.04;
 
-  /* LAND / WATER SPEED EFFECT */
-  let isWater = y > 200;
-
-  let speed = isWater ? 0.01 : 0.03;
-
-  x += dx * speed;
-  y += dy * speed;
+  x += dx * easing;
+  y += dy * easing;
 
   drone.style.left = x + "px";
   drone.style.top = y + "px";
 
-  /* 목표 변경 */
-  if(Math.abs(dx) < 10 && Math.abs(dy) < 10){
+  if (Math.random() > 0.4) {
+    createTrail(x, y);
+  }
 
-    tx = Math.random()*600;
-    ty = Math.random()*350;
-
+  if (Math.abs(dx) < 15 && Math.abs(dy) < 15) {
+    tx = Math.random() * 700 + 50;
+    ty = Math.random() * 400 + 50;
   }
 
   requestAnimationFrame(moveDrone);
 }
 
 moveDrone();
-
 </script>
 
 </body>
