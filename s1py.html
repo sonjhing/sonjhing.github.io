@@ -299,13 +299,15 @@ function openFile(filename, el){
   let content = "";
 
   if(filename === "s2py.md"){
-    content = `
-<html>
-  <body>
-    <h1>Hello </h1>
-  </body>
-</html>
-    `;
+    fetch("s2py.md")
+      .then(response => response.text())
+      .then(text => {
+        document.getElementById("filecontent").innerText = text;
+      })
+      .catch(err => {
+        document.getElementById("filecontent").innerText = "Error loading s2py.md. Please ensure you are viewing this via a web server.";
+      });
+    return;
   }
 
   else if(filename === "html.md"){
