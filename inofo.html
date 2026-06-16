@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Smart City Advanced 3D Simulation</title>
 
 <style>
@@ -35,8 +35,8 @@ section {
 }
 
 /* ======================
-   HERO SCREEN (스크롤 트랜지션 효과 추가)
-====================== */
+   HERO SCREEN
+========================= */
 .hero {
   height: 100vh;
   display: flex;
@@ -47,19 +47,14 @@ section {
   background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
   text-align: center;
   position: relative;
-  
-  /* [핵심 추가] 스크롤 시 내부 콘텐츠가 3D 공간으로 밀려나도록 원근감 부여 */
   perspective: 1000px;
   perspective-origin: center;
 }
 
-/* 스크롤 연동 애니메이션을 적용할 텍스트 컨테이너 */
 .hero-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  
-  /* Modern CSS: 스크롤 영역에 반응하여 3D 줌아웃+페이드아웃 처리 */
   animation: heroScrollOut linear both;
   animation-timeline: scroll(root);
   animation-range: exit;
@@ -88,7 +83,6 @@ section {
   opacity: 0.8;
 }
 
-/* [스크롤 애니메이션 정의] 아래로 내릴수록 깊숙이 멀어지며 사라짐 */
 @keyframes heroScrollOut {
   to {
     transform: translateZ(-300px) translateY(-50px);
@@ -110,58 +104,157 @@ section {
 
 h2 {
   font-size: 32px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   color: #f8fafc;
   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
   letter-spacing: 1px;
 }
 
 /* ======================
-   SUBWAY STATION (배경 고정, 내부 3D 연출)
+   SUBWAY STATION & HUD
 ====================== */
 .subway {
-  width: 800px;
-  height: 450px;
-  background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+  width: 1000px;
+  height: 550px;
+  background: linear-gradient(180deg, #091124 0%, #020617 100%);
   border-radius: 24px;
   position: relative;
   overflow: hidden;
   border: 2px solid #1e293b;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-  transition: background 0.8s ease, border-color 0.5s, box-shadow 0.5s;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
   perspective: 1000px;
+  cursor: pointer;
 }
 
-.subway.low { border-color: #10b981; box-shadow: 0 0 30px rgba(16, 185, 129, 0.2); }
-.subway.mid { border-color: #f59e0b; box-shadow: 0 0 30px rgba(245, 158, 11, 0.2); }
-.subway.high { border-color: #ef4444; box-shadow: 0 0 40px rgba(239, 68, 68, 0.4); }
+.subway.low { border-color: #10b981; box-shadow: 0 0 30px rgba(16, 185, 129, 0.25); }
+.subway.mid { border-color: #f59e0b; box-shadow: 0 0 30px rgba(245, 158, 11, 0.3); }
+.subway.high { border-color: #ef4444; box-shadow: 0 0 40px rgba(239, 68, 68, 0.5); }
 
 .subway::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px);
   background-size: 100% 20px;
   pointer-events: none;
 }
 
-.dot {
-  width: 8px;
-  height: 8px;
-  background: #00e5ff;
-  border-radius: 50%;
+.subway-hud {
   position: absolute;
-  box-shadow: 0 0 12px #00e5ff, 0 0 20px #00e5ff;
-  animation: floatDown 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  background: rgba(4, 10, 22, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 20px 28px;
+  border-radius: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
   pointer-events: none;
 }
 
-@keyframes floatDown {
-  0% { transform: translateY(-20px) translateZ(80px) rotateX(-15deg); opacity: 0; scale: 1.8; }
-  15% { opacity: 1; scale: 1; }
-  100% { transform: translateY(470px) translateZ(0px) rotateX(0deg); opacity: 0; }
+.hud-instruction {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
+.hud-instruction .main-alert {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.8px;
+}
+.subway.low .main-alert { text-shadow: 0 0 12px rgba(16, 185, 129, 0.6); }
+.subway.mid .main-alert { text-shadow: 0 0 12px rgba(245, 158, 11, 0.6); }
+.subway.high .main-alert { text-shadow: 0 0 12px rgba(239, 68, 68, 0.6); }
+
+.hud-instruction .sub-alert {
+  font-size: 1.2rem;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.hud-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.status-light {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.status-light::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.subway.low .status-light { color: #10b981; }
+.subway.low .status-light::before { background: #10b981; box-shadow: 0 0 12px #10b981; }
+.subway.mid .status-light { color: #f59e0b; }
+.subway.mid .status-light::before { background: #f59e0b; box-shadow: 0 0 12px #f59e0b; }
+.subway.high .status-light { color: #ef4444; }
+.subway.high .status-light::before { background: #ef4444; box-shadow: 0 0 12px #ef4444; }
+
+.hud-counter-board {
+  border-left: 1px solid rgba(255,255,255,0.15);
+  padding-left: 24px;
+}
+.hud-counter-board .count-lbl {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+.hud-counter-board .count-val {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #00e5ff;
+  font-family: monospace;
+  text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+  line-height: 1;
+}
+
+/* 👥 승객 노드 */
+.passenger {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  position: absolute;
+  background: #00e5ff;
+  cursor: pointer;
+  box-shadow: 0 0 10px #00e5ff, 0 0 20px rgba(0,229,255,0.7);
+  animation: passengerMove 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  transition: transform .2s, background-color 0.3s;
+  pointer-events: auto;
+  z-index: 5;
+}
+.passenger:hover { transform: scale(1.3); }
+.passenger.selected {
+  background: #10b981;
+  box-shadow: 0 0 15px #10b981, 0 0 30px #10b981;
+}
+
+@keyframes passengerMove {
+  0% { transform: translateY(-20px) translateZ(80px); opacity: 0; scale: 1.5; }
+  12% { opacity: 1; scale: 1; }
+  100% { transform: translateY(470px) translateZ(0px); opacity: 0; }
+}
+
+/* 기차 오브젝트 */
 .train {
   position: absolute;
   bottom: 40px;
@@ -182,13 +275,7 @@ h2 {
   left: 15px;
   width: 210px;
   height: 22px;
-  background: repeating-linear-gradient(
-    90deg,
-    #00e5ff 0px,
-    #00e5ff 25px,
-    transparent 25px,
-    transparent 38px
-  );
+  background: repeating-linear-gradient(90deg, #00e5ff 0px, #00e5ff 25px, transparent 25px, transparent 38px);
   box-shadow: 0 0 15px rgba(0, 229, 255, 0.8);
   border-radius: 4px;
 }
@@ -241,8 +328,7 @@ h2 {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
   background-size: 40px 40px;
   pointer-events: none;
 }
@@ -251,8 +337,8 @@ h2 {
   position: absolute;
   width: 100%;
   height: 55%;
-  background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
   top: 0;
+  background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
   border-bottom: 3px solid #10b981;
 }
 
@@ -275,9 +361,7 @@ h2 {
   animation: oceanMove 10s linear infinite;
 }
 
-@keyframes oceanMove {
-  100% { transform: rotate(360deg); }
-}
+@keyframes oceanMove { 100% { transform: rotate(360deg); } }
 
 .drone {
   width: 24px;
@@ -287,7 +371,9 @@ h2 {
   position: absolute;
   transform: translateZ(60px); 
   transform-style: preserve-3d;
-  box-shadow: 0 40px 20px rgba(0,0,0,0.5); 
+  box-shadow: 0 40px 20px rgba(0,0,0,0.5);
+  left: 388px;
+  top: 238px;
 }
 
 .drone::before {
@@ -300,9 +386,7 @@ h2 {
   box-shadow: 0 0 15px #00e5ff;
 }
 
-@keyframes spin {
-  100% { transform: rotate(360deg); }
-}
+@keyframes spin { 100% { transform: rotate(360deg); } }
 
 .trail-dot {
   position: absolute;
@@ -317,14 +401,13 @@ h2 {
   animation: fadeOut 0.8s forwards;
 }
 
-@keyframes fadeOut {
-  100% { opacity: 0; scale: 0.1; }
-}
+@keyframes fadeOut { 100% { opacity: 0; scale: 0.1; } }
 
 .click-hint {
   margin-top: 15px;
   color: #64748b;
-  font-size: 14px;
+  font-size: 20px;
+  font-weight: 500;
 }
 </style>
 </head>
@@ -339,15 +422,31 @@ h2 {
 </div>
 
 <section>
-  <h2>🚇 SUBWAY CROWD MONITOR</h2>
+  <h2>Subway Crowd Monitor</h2>
+  
   <div class="subway low" id="subway">
+    <div class="subway-hud">
+      <div class="hud-instruction">
+        <span class="main-alert">Interactive </span>
+        <span class="sub-alert">패널 클릭 시 인구가 증가합니다.</span>
+      </div>
+      <div class="hud-status-badge">
+        <div class="status-light" id="statusLabel">Stable</div>
+        <div class="hud-counter-board">
+          <div class="count-lbl">Inflow Volume</div>
+          <div class="count-val" id="densityCounter">00</div>
+        </div>
+      </div>
+    </div>
+    
     <div class="train"></div>
   </div>
-  <div class="click-hint">화면을 클릭하면 승객 유입량이 급격히 증가합니다.</div>
+  
+  <div class="click-hint">인구 데이터 추이에 맞추어 디스플레이 테두리 LED가 실시간으로 변경됩니다.</div>
 </section>
 
 <section>
-  <h2>🚁 Air Surf Drone</h2>
+  <h2>🚁 Air Surf Drone Controller</h2>
   <div class="map-container">
     <div class="map" id="map">
       <div class="land"></div>
@@ -355,7 +454,7 @@ h2 {
       <div class="drone" id="drone"></div>
     </div>
   </div>
-  <div class="click-hint">드론은 실시간 지형(육지/해양)을 감지하여 비행 속도를 가변 제어합니다.</div>
+  <div class="click-hint">마우스를 맵 위에 올리면 드론이 따라옵니다.</div>
 </section>
 
 <script>
@@ -363,38 +462,50 @@ h2 {
    SUBWAY SYSTEM (JS)
 ====================== */
 const subway = document.getElementById("subway");
+const densityCounter = document.getElementById("densityCounter");
+const statusLabel = document.getElementById("statusLabel");
 let crowd = 0;
 
+// 커스텀 임계치 적용 규칙 (초록 Stable: ~10 / 주황 Warning: ~50 / 빨강 Danger: 51~)
 function updateColor() {
   subway.classList.remove("low", "mid", "high");
-  if (crowd < 12) {
+  if (crowd <= 10) {
     subway.classList.add("low");
-  } else if (crowd < 28) {
+    statusLabel.innerText = "Stable";
+  } else if (crowd <= 50) {
     subway.classList.add("mid");
+    statusLabel.innerText = "Warning";
   } else {
     subway.classList.add("high");
+    statusLabel.innerText = "Danger";
   }
+  densityCounter.innerText = String(crowd).padStart(2, '0');
 }
 
-function createDot() {
-  let d = document.createElement("div");
-  d.className = "dot";
-  d.style.left = (Math.random() * 740 + 30) + "px";
-  d.style.top = "-10px";
+function createPassenger() {
+  let p = document.createElement("div");
+  p.className = "passenger";
+  p.style.left = (Math.random() * 740 + 30) + "px";
+  p.style.top = "-10px";
   
-  subway.appendChild(d);
-  setTimeout(() => d.remove(), 4000);
+  p.addEventListener("click", (e) => {
+    e.stopPropagation();
+    p.classList.toggle("selected");
+  });
+  
+  subway.appendChild(p);
+  setTimeout(() => p.remove(), 4000);
 }
 
 setInterval(() => {
-  createDot();
+  createPassenger();
   if (crowd > 0) crowd -= 1;
   updateColor();
 }, 350);
 
 subway.addEventListener("click", () => {
   for (let i = 0; i < 8; i++) {
-    setTimeout(createDot, i * 50);
+    setTimeout(createPassenger, i * 50);
   }
   crowd += 8;
   updateColor();
@@ -402,45 +513,83 @@ subway.addEventListener("click", () => {
 
 
 /* ======================
-   DRONE SYSTEM WITH TRAIL (JS)
+   🤖 DRONE HYBRID TRACKING SYSTEM (마우스 정지 감지 보정형)
 ====================== */
 const drone = document.getElementById("drone");
 const map = document.getElementById("map");
 
-let x = 150;
-let y = 150;
-let tx = 600;
-let ty = 150;
+let droneX = 388;
+let droneY = 238;
+let targetX = 388;
+let targetY = 238;
 
-function createTrail(tx, ty) {
+let isMouseActive = false; 
+let mouseMoveTimeout = null; 
+
+map.addEventListener("mousemove", (e) => {
+  isMouseActive = true;
+  
+  const rect = map.getBoundingClientRect();
+  targetX = e.clientX - rect.left - 12;
+  targetY = (e.clientY - rect.top) * 1.35 - 12; 
+
+  if (targetX < 10) targetX = 10;
+  if (targetX > 766) targetX = 766;
+  if (targetY < 10) targetY = 10;
+  if (targetY > 466) targetY = 466;
+
+  clearTimeout(mouseMoveTimeout);
+
+  // 1.5초간 움직임이 감지되지 않으면 순항 모드로 자동 복귀 타이머 작동
+  mouseMoveTimeout = setTimeout(() => {
+    isMouseActive = false;
+    pickRandomTarget(); 
+  }, 1500);
+});
+
+map.addEventListener("mouseleave", () => {
+  clearTimeout(mouseMoveTimeout);
+  isMouseActive = false;
+  pickRandomTarget();
+});
+
+function pickRandomTarget() {
+  if (!isMouseActive) {
+    targetX = Math.random() * 700 + 50;
+    targetY = Math.random() * 400 + 50;
+  }
+}
+
+function createTrail(x, y) {
   const trail = document.createElement("div");
   trail.className = "trail-dot";
-  trail.style.left = tx + 9 + "px"; 
-  trail.style.top = ty + 9 + "px";
+  trail.style.left = (x + 9) + "px"; 
+  trail.style.top = (y + 9) + "px";
   map.appendChild(trail);
   setTimeout(() => trail.remove(), 800);
 }
 
 function moveDrone() {
-  let dx = tx - x;
-  let dy = ty - y;
+  let dx = targetX - droneX;
+  let dy = targetY - droneY;
 
-  let isWater = y > (500 * 0.55);
-  let easing = isWater ? 0.015 : 0.04;
+  let isWater = droneY > (500 * 0.55);
+  let easing = isWater ? 0.02 : 0.06;
 
-  x += dx * easing;
-  y += dy * easing;
+  droneX += dx * easing;
+  droneY += dy * easing;
 
-  drone.style.left = x + "px";
-  drone.style.top = y + "px";
+  drone.style.left = droneX + "px";
+  drone.style.top = droneY + "px";
 
-  if (Math.random() > 0.4) {
-    createTrail(x, y);
+  if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
+    if (Math.random() > 0.4) {
+      createTrail(droneX, droneY);
+    }
   }
 
-  if (Math.abs(dx) < 15 && Math.abs(dy) < 15) {
-    tx = Math.random() * 700 + 50;
-    ty = Math.random() * 400 + 50;
+  if (!isMouseActive && Math.abs(dx) < 15 && Math.abs(dy) < 15) {
+    pickRandomTarget();
   }
 
   requestAnimationFrame(moveDrone);
