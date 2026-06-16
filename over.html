@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O — Neon Living Space</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+   BASE & RESET
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Space Grotesk", sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, #0f172a, #020617 100%);
+    color: #f8fafc;
+    perspective: 1200px;
+}
+
+/* =========================
+   DYNAMIC NEON ORBS
+========================= */
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.4;
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+
+.orb.blue {
+    width: 500px;
+    height: 500px;
+    background: #00e5ff;
+    top: -10%;
+    left: 5%;
+    animation: floatOrb 18s ease-in-out infinite alternate;
+}
+
+.orb.pink {
+    width: 600px;
+    height: 600px;
+    background: #ff4fd8;
+    bottom: -15%;
+    right: 2%;
+    animation: floatOrb 22s ease-in-out infinite alternate-reverse;
+}
+
+.orb.green {
+    width: 400px;
+    height: 400px;
+    background: #7CFF6B;
+    top: 35%;
+    left: 70%;
+    animation: floatOrb 14s ease-in-out infinite alternate;
+}
+
+.mouse-glow {
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, rgba(255, 79, 216, 0.05) 40%, rgba(0, 0, 0, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    will-change: left, top;
+}
+
+@keyframes floatOrb {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(50px, -60px) scale(1.15); }
+}
+
+/* =========================
+   ROOM & CONTAINER
+========================= */
+.room {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    transform-style: preserve-3d;
+}
+
+/* =========================
+   3D HOLOGRAM CARD
+========================= */
+.card-wrapper {
+    transform-style: preserve-3d;
+    perspective: 1200px;
+    animation: levitate 5s ease-in-out infinite;
+}
+
+.card {
+    width: 440px;
+    padding: 40px;
+    border-radius: 28px;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 
+        0 4px 30px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(0, 229, 255, 0.05),
+        inset 0 1px 2px rgba(255, 255, 255, 0.15);
+    transition: box-shadow 0.2s cubic-bezier(0.25, 1, 0.5, 1), transform 0.1s ease-out;
+    transform-style: preserve-3d;
+}
+
+@keyframes levitate {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.card-content {
+    transform: translateZ(40px);
+    transform-style: preserve-3d;
+}
+
+/* =========================
+   TYPOGRAPHY & TEXT
+========================= */
+.title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 2px;
+    text-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
+    font-variant-numeric: tabular-nums;
+}
+
+.subtitle {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.subtitle::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #ff4fd8;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #ff4fd8;
+}
+
+.section {
+    margin-bottom: 24px;
+    transform: translateZ(20px);
+}
+
+.label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #00e5ff;
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+}
+
+.text {
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    line-height: 1.7;
+    font-weight: 400;
+}
+
+/* =========================
+   TAGS
+========================= */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.tag {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(0, 229, 255, 0.04);
+    border: 1px solid rgba(0, 229, 255, 0.15);
+    color: #00e5ff;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    cursor: pointer;
+}
+
+.tag:hover {
+    background: rgba(0, 229, 255, 0.15);
+    border-color: #00e5ff;
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+    transform: translateY(-3px) scale(1.05);
+}
+
+/* =========================
+   FLOATING INTERACTIVE UI
+========================= */
+.float-ui {
+    position: absolute;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 3;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.float-ui:hover {
+    color: #00e5ff;
+    background: rgba(15, 23, 42, 0.6);
+    border-color: rgba(0, 229, 255, 0.4);
+    box-shadow: 0 12px 30px rgba(0, 229, 255, 0.15);
+    transform: scale(1.08) translateZ(50px);
+}
+
+.ui1 { top: 20%; left: 12%; animation: floatUI_1 8s ease-in-out infinite alternate; }
+.ui2 { top: 30%; right: 12%; animation: floatUI_2 9s ease-in-out infinite alternate; }
+.ui3 { bottom: 20%; left: 15%; animation: floatUI_3 7s ease-in-out infinite alternate; }
+
+@keyframes floatUI_1 { 0% { transform: translateY(0); } 100% { transform: translateY(-20px) translateX(8px); } }
+@keyframes floatUI_2 { 0% { transform: translateY(0); } 100% { transform: translateY(16px) translateX(-10px); } }
+@keyframes floatUI_3 { 0% { transform: translateY(0); } 100% { transform: translateY(-12px) translateX(-6px); } }
+
+/* =========================
+   BACK BUTTON
+========================= */
+.back {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #64748b;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.back:hover {
+    color: #00e5ff;
+    text-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+    transform: translateX(-5px);
+}
+</style>
+</head>
+
+<body>
+
+<div class="mouse-glow" id="mouseGlow"></div>
+
+<div class="orb blue"></div>
+<div class="orb pink"></div>
+<div class="orb green"></div>
+
+<div class="back" onclick="history.back()">← SYSTEM.BACK</div>
+
+<div class="float-ui ui1">pao681mn@gmail.com</div>
+<!-- 이 부분이 링크 연동된 코드입니다 -->
+<div class="float-ui ui2" onclick="window.open('https://sonjhing.github.io/hijhing.gi/', '_blank')">coding</div>
+<div class="float-ui ui3">INTERACTIVE TECH</div>
+
+<div class="room">
+    <div class="card-wrapper">
+        <div class="card" id="tiltCard">
+            <div class="card-content">
+                <div class="title" id="scrambleTitle" data-value="SONJHING">SONJHING</div>
+                <div class="subtitle">INTERACTIVE DEVELOPER</div>
+
+                <div class="section">
+                    <div class="label">ABOUT</div>
+                    <div class="text">
+                        감각적인 네온 비주얼과 경계 없는 인터랙션 UI에 몰입합니다. 코드와 디자인의 교점에서 사용자 경험을 설계하는 것을 즐깁니다.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="label">FOCUS</div>
+                    <div class="tags">
+                        <div class="tag">Frontend</div>
+                        <div class="tag">UI/UX Craft</div>
+                        <div class="tag">Interaction</div>
+                        <div class="tag">3D Web</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="label">STYLE</div>
+                    <div class="text">
+                        Glassmorphic Neomorphism & Pure Cyber Neon Space.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const card = document.getElementById('tiltCard');
+    const room = document.querySelector('.room');
+    const mouseGlow = document.getElementById('mouseGlow');
+    const scrambleTitle = document.getElementById('scrambleTitle');
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        mouseGlow.style.left = `${mouseX}px`;
+        mouseGlow.style.top = `${mouseY}px`;
+    });
+
+    room.addEventListener('mousemove', (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        
+        const middleX = window.innerWidth / 2;
+        const middleY = window.innerHeight / 2;
+        
+        const offsetX = (x - middleX) / middleX;
+        const offsetY = (y - middleY) / middleY;
+        
+        const maxTilt = 15;
+        const tiltX = (offsetY * maxTilt).toFixed(2);
+        const tiltY = (offsetX * -maxTilt).toFixed(2);
+        
+        card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+        
+        card.style.boxShadow = `
+            ${offsetX * -20}px ${offsetY * -20}px 50px rgba(0, 0, 0, 0.3),
+            ${offsetX * 15}px ${offsetY * 15}px 60px rgba(0, 229, 255, 0.25),
+            inset 0 1px 2px rgba(255, 255, 255, 0.2)
+        `;
+    });
+
+    room.addEventListener('mouseleave', () => {
+        card.style.transition = "transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.6s ease";
+        card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+        card.style.boxShadow = `
+            0 4px 30px rgba(0, 0, 0, 0.4),
+            0 0 40px rgba(0, 229, 255, 0.05),
+            inset 0 1px 2px rgba(255, 255, 255, 0.15)
+        `;
+    });
+
+    room.addEventListener('mouseenter', () => {
+        card.style.transition = "none";
+    });
+
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$";
+    let interval = null;
+
+    function triggerScramble() {
+        let iteration = 0;
+        clearInterval(interval);
+        
+        interval = setInterval(() => {
+            scrambleTitle.innerText = scrambleTitle.innerText
+                .split("")
+                .map((letter, index) => {
+                    if(index < iteration) {
+                        return scrambleTitle.dataset.value[index];
+                    }
+                    return letters[Math.floor(Math.random() * 36)];
+                })
+                .join("");
+            
+            if(iteration >= scrambleTitle.dataset.value.length){ 
+                clearInterval(interval);
+            }
+            iteration += 1 / 3;
+        }, 30);
+    }
+
+    window.addEventListener('DOMContentLoaded', triggerScramble);
+    scrambleTitle.addEventListener('mouseover', triggerScramble);
+</script>
+
+</body>
+</html>
