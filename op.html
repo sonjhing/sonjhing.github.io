@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>말랑말랑 오징어 다리 떼어먹기</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e0f2fe;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #0369a1;
+            margin-bottom: 100px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* 오징어 전체 컨테이너 */
+        .squid-container {
+            position: relative;
+            width: 1000px;
+            height: 1000px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 오징어 머리 (몸통) */
+        .squid-head {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background-color: #ff7a7a;
+            border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+            box-shadow: inset -15px -15px 0px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+
+        /* 오징어 귀 (지느러미) */
+        .squid-head::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 90px solid #ff7a7a;
+            border-bottom: 90px solid transparent;
+            transform: rotate(-25deg);
+        }
+        .squid-head::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            width: 0;
+            height: 0;
+            border-right: 50px solid transparent;
+            border-left: 90px solid #ff7a7a;
+            border-bottom: 90px solid transparent;
+            transform: rotate(25deg);
+        }
+
+        /* 눈 */
+        .eyes {
+            display: flex;
+            justify-content: space-between;
+            width: 200px;
+            margin: 180px auto 0;
+        }
+        .eye {
+            width: 70px;
+            height: 40px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: relative;
+        }
+        .eye::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #333;
+            border-radius: 50%;
+            top: 7px;
+            left: 7px;
+        }
+
+        /* 입 */
+        .mouth {
+            width: 50px;
+            height: 20px;
+            border-bottom: 4px solid #333;
+            border-radius: 0 0 10px 10px;
+            margin: 15px auto 0;
+        }
+
+        /* 다리 묶음 */
+        .squid-legs {
+            display: flex;
+            justify-content: space-between;
+            width: 300px;
+            height: 300px;
+            margin-top: -10px;
+            z-index: 1;
+        }
+
+        /* 개별 다리 스타일 */
+        .leg {
+            width: 20px;
+            height: 180px;
+            background-color: #ff8e8e;
+            border-radius: 0 0 10px 10px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            position: relative;
+            transform-origin: top center;
+            box-shadow: inset -3px 0px 0px rgba(0,0,0,0.08);
+        }
+
+        /* 다리 호버 효과 (먹음직(?)스러워 보임) */
+        .leg:hover {
+            background-color: #ff6565;
+            transform: scale(1.05);
+        }
+
+        /* 빨판 표현 */
+        .leg::before {
+            content: '••••••••';
+            position: absolute;
+            top: 20px;
+            left: 3px;
+            color: #ffccd5;
+            font-size: 14px;
+            letter-spacing: 5px;
+            writing-mode: vertical-rl;
+        }
+
+        /* 긴 다리 2개 변형 */
+        .leg.long {
+            height: 200px;
+            background-color: #ff6565;
+        }
+
+        /* 다리가 떨어져 나가는 애니메이션 */
+        .leg.fall {
+            pointer-events: none; /* 한 번 누르면 연속 클릭 방지 */
+            animation: fallOff 0.8s forwards ease-in;
+        }
+
+        @keyframes fallOff {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            30% {
+                transform: translateY(10px) rotate(15deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(500px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        /* 리셋 버튼 */
+        .reset-btn {
+            margin-top: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background 0.2s;
+        }
+        .reset-btn:hover {
+            background-color: #0369a1;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🦑 오징어 다리를 톡! 떼어 드세요</h1>
+
+    <div class="squid-container">
+        <div class="squid-head">
+            <div class="eyes">
+                <div class="eye"></div>
+                <div class="eye"></div>
+            </div>
+            <div class="mouth"></div>
+        </div>
+
+        <div class="squid-legs">
+            <div class="leg"></div>
+            <div class="leg"></div>
+            <div class="leg long"></div>
+            <div class="leg"></div>
+            <div class="leg"></div>
+            <div class="leg"></div>
+            <div class="leg"></div>
+            <div class="leg long"></div>
+            <div class="leg"></div>
+            <div class="leg"></div>
+        </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetLegs()">다리 리필하기 🔄</button>
+
+    <script>
+        // 모든 다리 요소를 가져옵니다.
+        const legs = document.querySelectorAll('.leg');
+
+        // 각 다리에 클릭 이벤트 추가
+        legs.forEach(leg => {
+            leg.addEventListener('click', () => {
+                // 'fall' 클래스를 추가하여 아래로 떨어지는 애니메이션 실행
+                leg.classList.add('fall');
+            });
+        });
+
+        // 다리 초기화(리필) 함수
+        function resetLegs() {
+            legs.forEach(leg => {
+                leg.classList.remove('fall');
+            });
+        }
+    </script>
+</body>
+</html>
