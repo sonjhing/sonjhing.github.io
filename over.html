@@ -115,7 +115,7 @@ body {
         0 4px 30px rgba(0, 0, 0, 0.4),
         0 0 40px rgba(0, 229, 255, 0.05),
         inset 0 1px 2px rgba(255, 255, 255, 0.15);
-    transition: box-shadow 0.2s cubic-bezier(0.25, 1, 0.5, 1), transform 0.1s ease-out;
+    transition: box-shadow 0.2s cubic-bezier(0.25, 1, 0.5, 1), transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
     transform-style: preserve-3d;
 }
 
@@ -139,6 +139,7 @@ body {
     letter-spacing: 2px;
     text-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
     font-variant-numeric: tabular-nums;
+    display: inline-block;
 }
 
 .subtitle {
@@ -212,6 +213,19 @@ body {
     transform: translateY(-3px) scale(1.05);
 }
 
+/* 핑크 포인트 컬러가 들어간 FOCUS 전용 태그 스타일 추가 */
+.tag.style-focus {
+    color: #ff4fd8;
+    background: rgba(255, 79, 216, 0.04);
+    border: 1px solid rgba(255, 79, 216, 0.2);
+}
+.tag.style-focus:hover {
+    background: rgba(255, 79, 216, 0.15);
+    border-color: #ff4fd8;
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(255, 79, 216, 0.4);
+}
+
 /* =========================
    FLOATING INTERACTIVE UI
 ========================= */
@@ -231,6 +245,7 @@ body {
     transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     z-index: 3;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    user-select: none;
 }
 
 .float-ui:hover {
@@ -283,8 +298,7 @@ body {
 
 <div class="back" onclick="history.back()">← SYSTEM.BACK</div>
 
-<div class="float-ui ui1">pao681mn@gmail.com</div>
-<!-- 이 부분이 링크 연동된 코드입니다 -->
+<div class="float-ui ui1" id="emailBtn" onclick="copyEmail()">pao681mn@gmail.com</div>
 <div class="float-ui ui2" onclick="window.open('https://sonjhing.github.io/hijhing.gi/', '_blank')">coding</div>
 <div class="float-ui ui3">INTERACTIVE TECH</div>
 
@@ -294,21 +308,28 @@ body {
             <div class="card-content">
                 <div class="title" id="scrambleTitle" data-value="SONJHING">SONJHING</div>
                 <div class="subtitle">INTERACTIVE DEVELOPER</div>
-
+                    
                 <div class="section">
                     <div class="label">ABOUT</div>
                     <div class="text">
-                        감각적인 네온 비주얼과 경계 없는 인터랙션 UI에 몰입합니다. 코드와 디자인의 교점에서 사용자 경험을 설계하는 것을 즐깁니다.
+                        감각적인 네온 비주얼과 경계 없는 인터랙션 UI
+                    </div>
+                </div>
+              
+                <div class="section">
+                    <div class="label">선호근무지</div>
+                    <div class="tags">
+                        <div class="tag">South Korea</div>
+                        <div class="tag">Everywhere</div>
                     </div>
                 </div>
 
                 <div class="section">
                     <div class="label">FOCUS</div>
                     <div class="tags">
-                        <div class="tag">Frontend</div>
-                        <div class="tag">UI/UX Craft</div>
-                        <div class="tag">Interaction</div>
-                        <div class="tag">3D Web</div>
+                        <div class="tag style-focus">Frontend</div>
+                        <div class="tag style-focus">UI/UX Craft</div>
+                        <div class="tag style-focus">Interaction</div>
                     </div>
                 </div>
 
@@ -318,6 +339,7 @@ body {
                         Glassmorphic Neomorphism & Pure Cyber Neon Space.
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -363,6 +385,7 @@ body {
     });
 
     room.addEventListener('mouseleave', () => {
+        // 부드럽게 원상복구되도록 transition 부여
         card.style.transition = "transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.6s ease";
         card.style.transform = `rotateX(0deg) rotateY(0deg)`;
         card.style.boxShadow = `
@@ -373,9 +396,13 @@ body {
     });
 
     room.addEventListener('mouseenter', () => {
+        // 마우스 진입 시 트랜지션을 제거하여 반응성 극대화
         card.style.transition = "none";
     });
 
+    /* =========================
+       SCRAMBLE TEXT EFFECT (오류 수정)
+    ========================= */
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$";
     let interval = null;
 
@@ -383,6 +410,7 @@ body {
         let iteration = 0;
         clearInterval(interval);
         
+        // 기존 코드 오류인 setInterval 명시 호출로 수정
         interval = setInterval(() => {
             scrambleTitle.innerText = scrambleTitle.innerText
                 .split("")
@@ -390,7 +418,7 @@ body {
                     if(index < iteration) {
                         return scrambleTitle.dataset.value[index];
                     }
-                    return letters[Math.floor(Math.random() * 36)];
+                    return letters[Math.floor(Math.random() * 38)]; // 글자 수 매칭 수정
                 })
                 .join("");
             
@@ -403,6 +431,33 @@ body {
 
     window.addEventListener('DOMContentLoaded', triggerScramble);
     scrambleTitle.addEventListener('mouseover', triggerScramble);
+
+    /* =========================
+       EMAIL CLIPBOARD COPY FUNCTION
+    ========================= */
+    function copyEmail() {
+        const emailText = "pao681mn@gmail.com";
+        const emailBtn = document.getElementById('emailBtn');
+        
+        // 클립보드 복사 API 실행
+        navigator.clipboard.writeText(emailText).then(() => {
+            // 성공 시 알림 피드백 효과
+            emailBtn.innerText = "COPIED! ✅";
+            emailBtn.style.color = "#7CFF6B";
+            emailBtn.style.borderColor = "rgba(124, 255, 107, 0.6)";
+            emailBtn.style.boxShadow = "0 12px 30px rgba(124, 255, 107, 0.3)";
+            
+            // 1.5초 후 원래대로 복구
+            setTimeout(() => {
+                emailBtn.innerText = emailText;
+                emailBtn.style.color = "";
+                emailBtn.style.borderColor = "";
+                emailBtn.style.boxShadow = "";
+            }, 1500);
+        }).catch(err => {
+            console.error('복사 실패:', err);
+        });
+    }
 </script>
 
 </body>
