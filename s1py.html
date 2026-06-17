@@ -183,25 +183,47 @@ body {
 /* EDITOR */
 .ide-editor {
   flex: 1;
-  padding: 20px;
+  padding: 40px;
   overflow-y: auto;
+}
+
+/* Custom Scrollbar for IDE Editor */
+.ide-editor::-webkit-scrollbar {
+  width: 10px;
+}
+.ide-editor::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ide-editor::-webkit-scrollbar-thumb {
+  background: #00e5ff33;
+  border-radius: 5px;
+}
+.ide-editor::-webkit-scrollbar-thumb:hover {
+  background: #00e5ff66;
 }
 
 .editor-header {
   display: flex;
   justify-content: space-between;
   background: #0b1633;
-  padding: 10px 15px;
+  padding: 15px 25px;
   color: #00e5ff;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .editor-content {
   background: #020713;
-  padding: 25px;
-  min-height: 500px;
+  padding: 50px 60px;
+  min-height: calc(100% - 75px);
   border: 1px solid #00e5ff22;
-  line-height: 1.6;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  line-height: 1.8;
+  font-size: 1.05rem;
 }
 
 .editor-content h1, .editor-content h2, .editor-content h3 {
@@ -282,6 +304,7 @@ body {
 <div class="cursor-glow"></div>
 
 <div class="start">
+  <button class="home-btn" onclick="location.href='index.html'" style="position: absolute; top: 20px; left: 20px; z-index: 10;">⬅ MAIN HOME</button>
   <div class="title">Skills</div>
   <div class="sub">coding</div>
 
