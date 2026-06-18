@@ -25,6 +25,40 @@
             gap: 40px;
             padding: 20px;
             overflow-x: hidden;
+            position: relative; 
+        }
+
+        /* 🟢 왼쪽 상단 이전 버튼 스타일 */
+        .top-nav-bar {
+            position: absolute;
+            top: 30px;
+            left: 40px;
+            z-index: 100;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #00e5ff;
+            background: rgba(7, 15, 36, 0.7);
+            border: 2px solid #1e3a8a;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 0 10px rgba(30, 58, 138, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .back-btn:hover {
+            color: #ffffff;
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, rgba(7, 15, 36, 0.9) 0%, rgba(59, 130, 246, 0.2) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.25), inset 0 0 15px rgba(59, 130, 246, 0.2);
         }
 
         /* ======================
@@ -33,18 +67,18 @@
         .phone-container {
             width: 360px;
             height: 740px;
-            background-color: #1a1a1a; /* 핸드폰 자체 바디: 검정 */
+            background-color: #1a1a1a; 
             border-radius: 40px;
             padding: 12px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-            border: 4px solid #475569; /* 핸드폰 외곽 테두리만 회색 */
+            border: 4px solid #475569; 
             position: relative;
         }
 
         .phone-notch {
             width: 150px;
             height: 25px;
-            background-color: #1a1a1a; /* 노치 영역 검정 */
+            background-color: #1a1a1a; 
             position: absolute;
             top: 12px;
             left: 50%;
@@ -65,9 +99,9 @@
             position: relative;
         }
 
-        /* 🟦 상단 타이틀 영역 (빨간색에서 딥블루로 변경) */
+        /* 🟦 상단 타이틀 영역 */
         .screen-header {
-            background-color: #0b1528; /* 요청하신 딥블루 색상 적용 */
+            background-color: #0b1528; 
             color: white;
             padding: 35px 20px 15px 20px;
             text-align: center;
@@ -90,10 +124,9 @@
             border: 3px dashed transparent;
         }
 
-        /* 카드가 영역 위에 올라왔을 때 스타일 */
         .camera-view.drag-over {
             background-color: #ffe3e3;
-            border-color: #0b1528; /* 딥블루 포인트에 맞춘 피드백 보정 */
+            border-color: #0b1528;
         }
 
         .camera-placeholder {
@@ -110,7 +143,7 @@
             display: none;
         }
 
-        /* 🟢 [신규 추가] 스캔 레이저 라인 & 반투명 스캔빔 */
+        /* 🟢 스캔 레이저 라인 & 반투명 스캔빔 */
         .scan-effect-wrapper {
             position: absolute;
             top: 0;
@@ -118,11 +151,10 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            display: none; /* 드롭 시 자바스크립트로 활성화 */
+            display: none;
             z-index: 5;
         }
 
-        /* 위아래로 움직이는 레이저선과 하단으로 퍼지는 반투명 빔 */
         .scan-laser {
             position: absolute;
             top: 0;
@@ -134,7 +166,6 @@
             animation: scanMove 2s ease-in-out infinite alternate;
         }
 
-        /* 레이저를 따라다니는 반투명 그라데이션 스캔빔 */
         .scan-beam {
             position: absolute;
             top: 0;
@@ -157,7 +188,7 @@
             100% { top: 0%; height: 100%; opacity: 0.4; }
         }
 
-        /* 결과창 (기존 블랙 오버레이 완벽 유지) */
+        /* 결과창 패널 */
         .result-overlay {
             position: absolute;
             bottom: 25px;
@@ -183,7 +214,7 @@
         .result-title {
             font-size: 0.8rem;
             color: #ffb703;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             font-weight: bold;
             letter-spacing: 1px;
         }
@@ -191,13 +222,24 @@
         .result-name {
             font-size: 1.25rem;
             font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .result-desc {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            line-height: 1.4;
+            font-weight: normal;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 8px;
         }
 
         /* ======================
-            🍪 SNACK CARD LIST (스마트시티 네온 블루 테마 완벽 유지)
+            🍪 SNACK CARD LIST (오직 이미지만 격자형 스타일로 표현)
         ====================== */
         .card-list-container {
-            width: 380px;
+            width: 320px;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -216,19 +258,22 @@
             filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.3));
         }
 
+        /* 🟢 텍스트가 빠진 정사각형 이미지 뷰 최적화 */
         .snack-card {
             background: rgba(7, 15, 36, 0.7);
             border: 2px solid #1e3a8a;
-            border-radius: 18px;
-            padding: 18px;
-            display: flex;
+            border-radius: 20px;
+            padding: 12px;
+            display: inline-flex;
+            justify-content: center;
             align-items: center;
-            gap: 15px;
             cursor: grab;
             transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 15px rgba(30, 58, 138, 0.3);
             user-select: none;
             backdrop-filter: blur(10px);
+            width: 100%;
+            height: 130px; /* 고정 높이 확보 */
         }
 
         .snack-card:active {
@@ -236,61 +281,43 @@
         }
 
         .snack-card:hover {
-            transform: translateY(-15px);
+            transform: translateY(-10px);
             border-color: #3b82f6;
             background: linear-gradient(135deg, rgba(7, 15, 36, 0.9) 0%, rgba(59, 130, 246, 0.15) 100%);
-            box-shadow: 0 30px 60px rgba(59, 130, 246, 0.3), inset 0 0 25px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.3), inset 0 0 25px rgba(59, 130, 246, 0.2);
         }
 
         .snack-avatar {
-            width: 65px;
-            height: 65px;
+            width: 100%;
+            height: 100%;
             background-color: rgba(2, 6, 23, 0.4);
-            border-radius: 12px;
+            border-radius: 14px;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2.2rem;
             pointer-events: none;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .snack-card:hover .snack-avatar {
-            transform: scale(1.15) translateY(-5px);
-            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.9));
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.6));
         }
 
-        .snack-info {
-            pointer-events: none;
-        }
-
-        .snack-info h3 {
-            font-size: 1.15rem;
-            color: #93c5fd;
-            margin-bottom: 4px;
-            font-weight: 700;
-            transition: all 0.3s;
-        }
-
-        .snack-card:hover .snack-info h3 {
-            color: #60a5fa;
-            text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-        }
-
-        .snack-info p {
-            font-size: 0.85rem;
-            color: #4b5563;
-            line-height: 1.4;
-            transition: all 0.3s;
-        }
-
-        .snack-card:hover .snack-info p {
-            color: #93c5fd;
+        .snack-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px;
         }
     </style>
 </head>
 <body>
+
+    <div class="top-nav-bar">
+        <a href="info.html" class="back-btn">◀ 이전</a>
+    </div>
 
     <div class="phone-container">
         <div class="phone-notch"></div>
@@ -311,7 +338,8 @@
 
                 <div class="result-overlay" id="result-popup">
                     <div class="result-title" id="scan-status-title">스캔 분석 중...</div>
-                    <div class="result-name" id="snack-result-text">무슨 과자입니다</div>
+                    <div class="result-name" id="snack-result-text">과자 이름</div>
+                    <div class="result-desc" id="snack-result-desc" style="display: none;">과자 설명</div>
                 </div>
             </div>
         </div>
@@ -321,38 +349,38 @@
         <h2 class="list-title">과자 인식 Engine</h2>
         
         <div class="snack-card" draggable="true" 
-             data-name="새우깡 🍤" 
+             data-name="새우깡" 
+             data-desc="손이 가요 손이 가~ 눈이 가요 눈이 가~<br>생새우로 만든 대한민국 오리지널 스낵!"
              data-img="sae.jpg">
             <div class="snack-avatar">
-                <img src="sae.jpg" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
-            </div>
-            <div class="snack-info">
-                <h3>새우깡</h3>
-                <p>손이 가요 손이 가~ 눈이 가요 눈이 가~<br>생새우로 만든 대한민국 오리지널 스낵!</p>
+                <img src="sae.jpg" alt="새우깡">
             </div>
         </div>
 
         <div class="snack-card" draggable="true" 
-             data-name="콘초 🌽🍫" 
+             data-name="콘초" 
+             data-desc="부드럽고 고소한 콘스낵 위에<br>달콤한 초콜릿이 듬뿍 발라진 꿀조합!"
              data-img="con.jpg">
             <div class="snack-avatar">
-                <img src="con.jpg" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
-            </div>
-            <div class="snack-info">
-                <h3>콘초</h3>
-                <p>부드럽고 고소한 콘스낵 위에<br>달콤한 초콜릿이 듬뿍 발라진 꿀조합!</p>
+                <img src="con.jpg" alt="콘초">
             </div>
         </div>
 
         <div class="snack-card" draggable="true" 
-             data-name="칸쵸 🍪" 
+             data-name="칸쵸" 
+             data-desc="바삭한 동글이 과자 속에 달콤한 초코!<br>귀여운 캐릭터 그림을 찾는 재미까지"
              data-img="kan.jpg">
             <div class="snack-avatar">
-                <img src="kan.jpg" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
+                <img src="kan.jpg" alt="칸쵸">
             </div>
-            <div class="snack-info">
-                <h3>칸쵸</h3>
-                <p>바삭한 동글이 과자 속에 달콤한 초코!<br>귀여운 캐릭터 그림을 찾는 재미까지</p>
+        </div>
+
+        <div class="snack-card" draggable="true" 
+             data-name="다이제" 
+             data-desc="묵직하고 바삭한 통밀 비스킷과<br>진하고 깊은 초콜릿의 완벽한 하모니!"
+             data-img="diget.jpg">
+            <div class="snack-avatar">
+                <img src="diget.jpg" alt="다이제">
             </div>
         </div>
     </div>
@@ -365,6 +393,7 @@
         const resultPopup = document.getElementById('result-popup');
         const resultStatusTitle = document.getElementById('scan-status-title');
         const resultText = document.getElementById('snack-result-text');
+        const resultDesc = document.getElementById('snack-result-desc'); 
         const scanEffect = document.getElementById('scan-effect');
 
         // 1. 드래그 시작 데이터 탑재
@@ -372,24 +401,24 @@
             card.addEventListener('dragstart', (e) => {
                 const payload = JSON.stringify({
                     name: card.dataset.name,
+                    desc: card.dataset.desc, 
                     img: card.dataset.img
                 });
                 e.dataTransfer.setData('text/plain', payload);
             });
         });
 
-        // 2. 드래그 영역 진입시 피드백
+        // 2. 드래그 레이아웃 제어
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropZone.classList.add('drag-over');
         });
 
-        // 3. 영역 이탈
         dropZone.addEventListener('dragleave', () => {
             dropZone.classList.remove('drag-over');
         });
 
-        // 4. 드롭 성공 처리 (동적 스캔 애니메이션 연출)
+        // 3. 드롭 및 가상 인터랙션 스캔 트리거
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropZone.classList.remove('drag-over');
@@ -397,38 +426,40 @@
             try {
                 const data = JSON.parse(e.dataTransfer.getData('text/plain'));
                 const snackName = data.name;
+                const snackDesc = data.desc; 
                 const imageUrl = data.img;
 
                 if (snackName && imageUrl) {
-                    // 기존 팝업 및 상태 초기화 후 이미지 노출
                     resultPopup.classList.remove('active');
+                    resultDesc.style.display = 'none'; 
                     placeholder.style.display = 'none';
                     cameraImage.src = imageUrl;
                     cameraImage.style.display = 'block';
 
-                // 스캔 빔/레이저 이펙트 가동
-                scanEffect.style.display = 'block';
+                    scanEffect.style.display = 'block';
 
-                // [단계 1] 드롭 즉시: 스캔 시작 알림
-                resultStatusTitle.textContent = "SYSTEM: 스캔 가동 중...";
-                resultText.textContent = "과자 실루엣 분석 중...";
-                resultPopup.classList.add('active');
+                    // [스캔 단계 1] 가동
+                    resultStatusTitle.textContent = "SYSTEM: 스캔 가동 중...";
+                    resultText.textContent = "과자 실루엣 분석 중...";
+                    resultPopup.classList.add('active');
 
-                // [단계 2] 1.2초 후: 인식 확률 계산 중 시뮬레이션
-                setTimeout(() => {
-                    resultStatusTitle.textContent = "ANALYSIS: 인식 확률 계산 중...";
-                    // 95%~99% 사이의 무작위 확률 생성하여 생동감 부여
-                    const randomConfidence = Math.floor(Math.random() * 5) + 95; 
-                    resultText.textContent = `일치율 ${randomConfidence}% 분석 완료`;
-                }, 1200);
+                    // [스캔 단계 2] 연산
+                    setTimeout(() => {
+                        resultStatusTitle.textContent = "ANALYSIS: 인식 확률 계산 중...";
+                        const randomConfidence = Math.floor(Math.random() * 5) + 95; 
+                        resultText.textContent = `일치율 ${randomConfidence}% 분석 완료`;
+                    }, 1200);
 
-                // [단계 3] 2.4초 후: 최종 인식 완료 및 과자 이름 표시, 레이저 종료
-                setTimeout(() => {
-                    scanEffect.style.display = 'none'; // 레이저 종료
-                    resultStatusTitle.textContent = "🟢 스캔 완료";
-                    resultText.textContent = `"${snackName}" 입니다!`;
-                }, 2400);
-            }
+                    // [스캔 단계 3] 결과 매핑 및 완료 출력
+                    setTimeout(() => {
+                        scanEffect.style.display = 'none'; 
+                        resultStatusTitle.textContent = "🟢 스캔 완료";
+                        
+                        resultText.innerHTML = snackName;
+                        resultDesc.innerHTML = snackDesc;
+                        resultDesc.style.display = 'block'; 
+                    }, 2400);
+                }
             } catch(e) {
                 console.error('Drag data parse error:', e);
             }
