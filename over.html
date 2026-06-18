@@ -14,6 +14,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    /* 시스템 기본 커서를 숨기고 사이버 커서 레이어로 대체 */
+    cursor: none !important; 
 }
 
 body {
@@ -23,6 +25,47 @@ body {
     background: radial-gradient(circle at 50% 50%, #0f172a, #020617 100%);
     color: #f8fafc;
     perspective: 1200px;
+}
+
+/* =========================
+   ✅ UPDATE: CYBER CUSTOM CURSOR
+========================= */
+.custom-cursor {
+    width: 6px;
+    height: 6px;
+    background: #00e5ff;
+    border-radius: 50%;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 10000;
+    box-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff;
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
+}
+.custom-cursor-follower {
+    width: 26px;
+    height: 26px;
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 50%;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    /* 쫀득하게 따라오는 관성 타이밍 적용 */
+    transition: transform 0.08s ease-out, width 0.2s, height 0.2s, border-color 0.2s, background-color 0.2s;
+}
+/* 인터랙티브 요소 호버 시 액티브 상태 연출 */
+body.hovering .custom-cursor {
+    width: 4px;
+    height: 4px;
+    background: #ff4fd8;
+    box-shadow: 0 0 10px #ff4fd8;
+}
+body.hovering .custom-cursor-follower {
+    width: 42px;
+    height: 42px;
+    border-color: #ff4fd8;
+    background: rgba(255, 79, 216, 0.06);
 }
 
 /* =========================
@@ -36,33 +79,9 @@ body {
     pointer-events: none;
     mix-blend-mode: screen;
 }
-
-.orb.blue {
-    width: 500px;
-    height: 500px;
-    background: #00e5ff;
-    top: -10%;
-    left: 5%;
-    animation: floatOrb 18s ease-in-out infinite alternate;
-}
-
-.orb.pink {
-    width: 600px;
-    height: 600px;
-    background: #ff4fd8;
-    bottom: -15%;
-    right: 2%;
-    animation: floatOrb 22s ease-in-out infinite alternate-reverse;
-}
-
-.orb.green {
-    width: 400px;
-    height: 400px;
-    background: #7CFF6B;
-    top: 35%;
-    left: 70%;
-    animation: floatOrb 14s ease-in-out infinite alternate;
-}
+.orb.blue { width: 500px; height: 500px; background: #00e5ff; top: -10%; left: 5%; animation: floatOrb 18s ease-in-out infinite alternate; }
+.orb.pink { width: 600px; height: 600px; background: #ff4fd8; bottom: -15%; right: 2%; animation: floatOrb 22s ease-in-out infinite alternate-reverse; }
+.orb.green { width: 400px; height: 400px; background: #7CFF6B; top: 35%; left: 70%; animation: floatOrb 14s ease-in-out infinite alternate; }
 
 .mouse-glow {
     position: fixed;
@@ -130,9 +149,10 @@ body {
 }
 
 /* =========================
-   TYPOGRAPHY & TEXT
+   ✅ UPDATE: CYBER GLITCH TYPOGRAPHY
 ========================= */
 .title {
+    position: relative;
     font-size: 2.4rem;
     font-weight: 700;
     color: #ffffff;
@@ -140,6 +160,56 @@ body {
     text-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
     font-variant-numeric: tabular-nums;
     display: inline-block;
+}
+
+/* 레이어 중첩을 활용한 RGB 스플릿 정밀 글리치 구현 */
+.title::before,
+.title::after {
+    content: attr(data-value);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    clip: rect(0, 0, 0, 0); 
+}
+
+.title::before {
+    left: 2px;
+    text-shadow: -2px 0 #ff4fd8;
+    animation: glitch-anim-1 2s infinite linear alternate-reverse;
+}
+
+.title::after {
+    left: -2px;
+    text-shadow: -2px 0 #00e5ff, 0 2px #7CFF6B;
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim-1 {
+    0% { clip: rect(15px, 9999px, 66px, 0); }
+    10% { clip: rect(34px, 9999px, 5px, 0); }
+    20% { clip: rect(81px, 9999px, 92px, 0); }
+    30% { clip: rect(21px, 9999px, 45px, 0); }
+    40% { clip: rect(76px, 9999px, 12px, 0); }
+    50% { clip: rect(43px, 9999px, 88px, 0); }
+    60% { clip: rect(5px, 9999px, 23px, 0); }
+    70% { clip: rect(91px, 9999px, 54px, 0); }
+    80% { clip: rect(12px, 9999px, 77px, 0); }
+    90% { clip: rect(65px, 9999px, 31px, 0); }
+    100% { clip: rect(0, 0, 0, 0); } /* 평소에는 노이즈를 숨겨 담백함 유지 */
+}
+
+@keyframes glitch-anim-2 {
+    0% { clip: rect(76px, 9999px, 11px, 0); }
+    15% { clip: rect(22px, 9999px, 94px, 0); }
+    30% { clip: rect(5px, 9999px, 62px, 0); }
+    45% { clip: rect(88px, 9999px, 41px, 0); }
+    60% { clip: rect(31px, 9999px, 80px, 0); }
+    75% { clip: rect(67px, 9999px, 15px, 0); }
+    90% { clip: rect(18px, 9999px, 73px, 0); }
+    100% { clip: rect(0, 0, 0, 0); }
 }
 
 .subtitle {
@@ -183,9 +253,7 @@ body {
     font-weight: 400;
 }
 
-/* =========================
-   TAGS
-========================= */
+/* TAGS */
 .tags {
     display: flex;
     flex-wrap: wrap;
@@ -202,7 +270,6 @@ body {
     border: 1px solid rgba(0, 229, 255, 0.15);
     color: #00e5ff;
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-    cursor: pointer;
 }
 
 .tag:hover {
@@ -213,7 +280,6 @@ body {
     transform: translateY(-3px) scale(1.05);
 }
 
-/* 핑크 포인트 컬러가 들어간 FOCUS 전용 태그 스타일 추가 */
 .tag.style-focus {
     color: #ff4fd8;
     background: rgba(255, 79, 216, 0.04);
@@ -226,9 +292,7 @@ body {
     box-shadow: 0 0 20px rgba(255, 79, 216, 0.4);
 }
 
-/* =========================
-   FLOATING INTERACTIVE UI
-========================= */
+/* FLOATING INTERACTIVE UI */
 .float-ui {
     position: absolute;
     font-size: 1.05rem;
@@ -241,7 +305,6 @@ body {
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     color: #94a3b8;
-    cursor: pointer;
     transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     z-index: 3;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
@@ -264,9 +327,7 @@ body {
 @keyframes floatUI_2 { 0% { transform: translateY(0); } 100% { transform: translateY(16px) translateX(-10px); } }
 @keyframes floatUI_3 { 0% { transform: translateY(0); } 100% { transform: translateY(-12px) translateX(-6px); } }
 
-/* =========================
-   BACK BUTTON
-========================= */
+/* BACK BUTTON */
 .back {
     position: absolute;
     top: 40px;
@@ -275,7 +336,6 @@ body {
     font-weight: 600;
     letter-spacing: 2px;
     color: #64748b;
-    cursor: pointer;
     z-index: 10;
     transition: all 0.3s ease;
 }
@@ -289,6 +349,9 @@ body {
 </head>
 
 <body>
+
+<div class="custom-cursor" id="customCursor"></div>
+<div class="custom-cursor-follower" id="customCursorFollower"></div>
 
 <div class="mouse-glow" id="mouseGlow"></div>
 
@@ -350,17 +413,54 @@ body {
     const room = document.querySelector('.room');
     const mouseGlow = document.getElementById('mouseGlow');
     const scrambleTitle = document.getElementById('scrambleTitle');
+    
+    // 커서 요소 바인딩
+    const cursor = document.getElementById('customCursor');
+    const follower = document.getElementById('customCursorFollower');
 
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
+    let followerX = mouseX;
+    let followerY = mouseY;
     
+    /* =========================
+       ✅ CUSTOM CURSOR LOGIC (이동 및 관성 딜레이 루프)
+    ========================= */
     window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+        
+        // 메인 포인터는 즉시 동기화
+        cursor.style.left = `${mouseX}px`;
+        cursor.style.top = `${mouseY}px`;
+        
         mouseGlow.style.left = `${mouseX}px`;
         mouseGlow.style.top = `${mouseY}px`;
     });
 
+    // 가이드 링이 쫀득하게 쫓아오게 만드는 프레임 애니메이션
+    function animateFollower() {
+        let dx = mouseX - followerX;
+        let dy = mouseY - followerY;
+        followerX += dx * 0.15; // 추적 감도 조절 (낮을수록 스무스함)
+        followerY += dy * 0.15;
+        
+        follower.style.left = `${followerX}px`;
+        follower.style.top = `${followerY}px`;
+        requestAnimationFrame(animateFollower);
+    }
+    animateFollower();
+
+    // 인터랙티브 요소 호버 시 커서 스케일 변동 감지 이벤트 리스너 통합
+    const interactiveElements = document.querySelectorAll('div[onclick], .tag, .float-ui, .back, .title');
+    interactiveElements.forEach(element => {
+        element.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+        element.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+
+    /* =========================
+       ROOM MOUSE TILT LOGIC
+    ========================= */
     room.addEventListener('mousemove', (e) => {
         const x = e.clientX;
         const y = e.clientY;
@@ -385,7 +485,6 @@ body {
     });
 
     room.addEventListener('mouseleave', () => {
-        // 부드럽게 원상복구되도록 transition 부여
         card.style.transition = "transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.6s ease";
         card.style.transform = `rotateX(0deg) rotateY(0deg)`;
         card.style.boxShadow = `
@@ -396,12 +495,11 @@ body {
     });
 
     room.addEventListener('mouseenter', () => {
-        // 마우스 진입 시 트랜지션을 제거하여 반응성 극대화
         card.style.transition = "none";
     });
 
     /* =========================
-       SCRAMBLE TEXT EFFECT (오류 수정)
+       SCRAMBLE TEXT EFFECT 
     ========================= */
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$";
     let interval = null;
@@ -410,7 +508,6 @@ body {
         let iteration = 0;
         clearInterval(interval);
         
-        // 기존 코드 오류인 setInterval 명시 호출로 수정
         interval = setInterval(() => {
             scrambleTitle.innerText = scrambleTitle.innerText
                 .split("")
@@ -418,7 +515,7 @@ body {
                     if(index < iteration) {
                         return scrambleTitle.dataset.value[index];
                     }
-                    return letters[Math.floor(Math.random() * 38)]; // 글자 수 매칭 수정
+                    return letters[Math.floor(Math.random() * 38)];
                 })
                 .join("");
             
@@ -439,15 +536,12 @@ body {
         const emailText = "pao681mn@gmail.com";
         const emailBtn = document.getElementById('emailBtn');
         
-        // 클립보드 복사 API 실행
         navigator.clipboard.writeText(emailText).then(() => {
-            // 성공 시 알림 피드백 효과
             emailBtn.innerText = "COPIED! ✅";
             emailBtn.style.color = "#7CFF6B";
             emailBtn.style.borderColor = "rgba(124, 255, 107, 0.6)";
             emailBtn.style.boxShadow = "0 12px 30px rgba(124, 255, 107, 0.3)";
             
-            // 1.5초 후 원래대로 복구
             setTimeout(() => {
                 emailBtn.innerText = emailText;
                 emailBtn.style.color = "";
