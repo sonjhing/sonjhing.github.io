@@ -6,7 +6,7 @@
     <title>과자 인식 Engine - Advanced Scanner</title>
     <style>
         /* ======================
-           RESET & CYBERPUNK BASE (전체 배경 딥블루-블랙)
+            RESET & CYBERPUNK BASE (전체 배경 딥블루-블랙)
         ====================== */
         * {
             box-sizing: border-box;
@@ -28,7 +28,7 @@
         }
 
         /* ======================
-           📱 SMARTPHONE UI (회색 테두리 + 검정 바디)
+            📱 SMARTPHONE UI (회색 테두리 + 검정 바디)
         ====================== */
         .phone-container {
             width: 360px;
@@ -110,6 +110,53 @@
             display: none;
         }
 
+        /* 🟢 [신규 추가] 스캔 레이저 라인 & 반투명 스캔빔 */
+        .scan-effect-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: none; /* 드롭 시 자바스크립트로 활성화 */
+            z-index: 5;
+        }
+
+        /* 위아래로 움직이는 레이저선과 하단으로 퍼지는 반투명 빔 */
+        .scan-laser {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #00e5ff, #3b82f6, #00e5ff, transparent);
+            box-shadow: 0 0 12px #00e5ff, 0 0 25px #3b82f6;
+            animation: scanMove 2s ease-in-out infinite alternate;
+        }
+
+        /* 레이저를 따라다니는 반투명 그라데이션 스캔빔 */
+        .scan-beam {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 229, 255, 0.15) 0%, transparent 100%);
+            transform-origin: top center;
+            animation: beamMove 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes scanMove {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+
+        @keyframes beamMove {
+            0% { top: 0%; height: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            100% { top: 0%; height: 100%; opacity: 0.4; }
+        }
+
         /* 결과창 (기존 블랙 오버레이 완벽 유지) */
         .result-overlay {
             position: absolute;
@@ -126,6 +173,7 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
+            z-index: 6;
         }
 
         .result-overlay.active {
@@ -146,7 +194,7 @@
         }
 
         /* ======================
-           🍪 SNACK CARD LIST (스마트시티 네온 블루 테마 완벽 유지)
+            🍪 SNACK CARD LIST (스마트시티 네온 블루 테마 완벽 유지)
         ====================== */
         .card-list-container {
             width: 380px;
@@ -252,12 +300,17 @@
             <div class="camera-view" id="drop-zone">
                 <div class="camera-placeholder" id="placeholder-text">
                     <span style="font-size: 3.5rem;">🍤</span>
-                    <p style="margin-top: 12px; font-weight: 500;">과자를 드래그해서<br>여기에 쏙 넣어주세요!</p>
+                    <p style="margin-top: 12px; font-weight: 500;">과자를 드래그해서<br>여기에 넣어주세요!</p>
                 </div>
                 <img id="camera-image" class="scanned-img" src="" alt="과자 이미지">
                 
+                <div class="scan-effect-wrapper" id="scan-effect">
+                    <div class="scan-beam"></div>
+                    <div class="scan-laser"></div>
+                </div>
+
                 <div class="result-overlay" id="result-popup">
-                    <div class="result-title">스캔 분석 완료</div>
+                    <div class="result-title" id="scan-status-title">스캔 분석 중...</div>
                     <div class="result-name" id="snack-result-text">무슨 과자입니다</div>
                 </div>
             </div>
@@ -289,7 +342,7 @@
 
         <div class="snack-card" draggable="true" 
              data-name="칸쵸 🍪" 
-             data-img="con">
+             data-img="kan.jpg">
             <div class="snack-avatar">🍪</div>
             <div class="snack-info">
                 <h3>칸쵸</h3>
@@ -304,7 +357,9 @@
         const placeholder = document.getElementById('placeholder-text');
         const cameraImage = document.getElementById('camera-image');
         const resultPopup = document.getElementById('result-popup');
+        const resultStatusTitle = document.getElementById('scan-status-title');
         const resultText = document.getElementById('snack-result-text');
+        const scanEffect = document.getElementById('scan-effect');
 
         // 1. 드래그 시작 데이터 탑재
         cards.forEach(card => {
@@ -325,7 +380,7 @@
             dropZone.classList.remove('drag-over');
         });
 
-        // 4. 드롭 성공 처리
+        // 4. 드롭 성공 처리 (동적 스캔 애니메이션 연출)
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropZone.classList.remove('drag-over');
@@ -334,16 +389,34 @@
             const imageUrl = e.dataTransfer.getData('snackImg');
 
             if (snackName && imageUrl) {
+                // 기존 팝업 및 상태 초기화 후 이미지 노출
                 resultPopup.classList.remove('active');
-
                 placeholder.style.display = 'none';
                 cameraImage.src = imageUrl;
                 cameraImage.style.display = 'block';
 
+                // 스캔 빔/레이저 이펙트 가동
+                scanEffect.style.display = 'block';
+
+                // [단계 1] 드롭 즉시: 스캔 시작 알림
+                resultStatusTitle.textContent = "SYSTEM: 스캔 가동 중...";
+                resultText.textContent = "과자 실루엣 분석 중...";
+                resultPopup.classList.add('active');
+
+                // [단계 2] 1.2초 후: 인식 확률 계산 중 시뮬레이션
                 setTimeout(() => {
+                    resultStatusTitle.textContent = "ANALYSIS: 인식 확률 계산 중...";
+                    // 95%~99% 사이의 무작위 확률 생성하여 생동감 부여
+                    const randomConfidence = Math.floor(Math.random() * 5) + 95; 
+                    resultText.textContent = `일치율 ${randomConfidence}% 분석 완료`;
+                }, 1200);
+
+                // [단계 3] 2.4초 후: 최종 인식 완료 및 과자 이름 표시, 레이저 종료
+                setTimeout(() => {
+                    scanEffect.style.display = 'none'; // 레이저 종료
+                    resultStatusTitle.textContent = "🟢 스캔 완료";
                     resultText.textContent = `"${snackName}" 입니다!`;
-                    resultPopup.classList.add('active');
-                }, 250);
+                }, 2400);
             }
         });
     </script>
