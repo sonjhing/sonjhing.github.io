@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>과자 인식 Engine - Advanced Scanner</title>
+    <style>
+        /* ======================
+           RESET & CYBERPUNK BASE (전체 배경 딥블루-블랙)
+        ====================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Malgun Gothic', 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #030d26 0%, #01040d 100%);
+            color: #94a3b8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            gap: 40px;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* ======================
+           📱 SMARTPHONE UI (회색 테두리 + 검정 바디)
+        ====================== */
+        .phone-container {
+            width: 360px;
+            height: 740px;
+            background-color: #1a1a1a; /* 핸드폰 자체 바디: 검정 */
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            border: 4px solid #475569; /* 핸드폰 외곽 테두리만 회색 */
+            position: relative;
+        }
+
+        .phone-notch {
+            width: 150px;
+            height: 25px;
+            background-color: #1a1a1a; /* 노치 영역 검정 */
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            z-index: 10;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 32px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* 🟦 상단 타이틀 영역 (빨간색에서 딥블루로 변경) */
+        .screen-header {
+            background-color: #0b1528; /* 요청하신 딥블루 색상 적용 */
+            color: white;
+            padding: 35px 20px 15px 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 과자 스캐너 내부 카메라 영역 */
+        .camera-view {
+            flex: 1;
+            background-color: #f1f3f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            border: 3px dashed transparent;
+        }
+
+        /* 카드가 영역 위에 올라왔을 때 스타일 */
+        .camera-view.drag-over {
+            background-color: #ffe3e3;
+            border-color: #0b1528; /* 딥블루 포인트에 맞춘 피드백 보정 */
+        }
+
+        .camera-placeholder {
+            text-align: center;
+            color: #adb5bd;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .scanned-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        /* 결과창 (기존 블랙 오버레이 완벽 유지) */
+        .result-overlay {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(26, 26, 26, 0.95);
+            color: white;
+            padding: 18px 25px;
+            border-radius: 22px;
+            width: 88%;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .result-overlay.active {
+            opacity: 1;
+        }
+
+        .result-title {
+            font-size: 0.8rem;
+            color: #ffb703;
+            margin-bottom: 4px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .result-name {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        /* ======================
+           🍪 SNACK CARD LIST (스마트시티 네온 블루 테마 완벽 유지)
+        ====================== */
+        .card-list-container {
+            width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .list-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00e5ff 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            border-left: 5px solid #3b82f6;
+            padding-left: 10px;
+            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.3));
+        }
+
+        .snack-card {
+            background: rgba(7, 15, 36, 0.7);
+            border: 2px solid #1e3a8a;
+            border-radius: 18px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: grab;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 15px rgba(30, 58, 138, 0.3);
+            user-select: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .snack-card:active {
+            cursor: grabbing;
+        }
+
+        .snack-card:hover {
+            transform: translateY(-15px);
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, rgba(7, 15, 36, 0.9) 0%, rgba(59, 130, 246, 0.15) 100%);
+            box-shadow: 0 30px 60px rgba(59, 130, 246, 0.3), inset 0 0 25px rgba(59, 130, 246, 0.2);
+        }
+
+        .snack-avatar {
+            width: 65px;
+            height: 65px;
+            background-color: rgba(2, 6, 23, 0.4);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.2rem;
+            pointer-events: none;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .snack-card:hover .snack-avatar {
+            transform: scale(1.15) translateY(-5px);
+            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.9));
+        }
+
+        .snack-info {
+            pointer-events: none;
+        }
+
+        .snack-info h3 {
+            font-size: 1.15rem;
+            color: #93c5fd;
+            margin-bottom: 4px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .snack-card:hover .snack-info h3 {
+            color: #60a5fa;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        .snack-info p {
+            font-size: 0.85rem;
+            color: #4b5563;
+            line-height: 1.4;
+            transition: all 0.3s;
+        }
+
+        .snack-card:hover .snack-info p {
+            color: #93c5fd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+            <div class="screen-header">과자 스캔 AI 스캐너</div>
+            
+            <div class="camera-view" id="drop-zone">
+                <div class="camera-placeholder" id="placeholder-text">
+                    <span style="font-size: 3.5rem;">🍤</span>
+                    <p style="margin-top: 12px; font-weight: 500;">과자를 드래그해서<br>여기에 쏙 넣어주세요!</p>
+                </div>
+                <img id="camera-image" class="scanned-img" src="" alt="과자 이미지">
+                
+                <div class="result-overlay" id="result-popup">
+                    <div class="result-title">스캔 분석 완료</div>
+                    <div class="result-name" id="snack-result-text">무슨 과자입니다</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-list-container">
+        <h2 class="list-title">과자 인식 Engine</h2>
+        
+        <div class="snack-card" draggable="true" 
+             data-name="새우깡 🍤" 
+             data-img="sae.jpg">
+            <div class="snack-avatar">🍤</div>
+            <div class="snack-info">
+                <h3>새우깡</h3>
+                <p>손이 가요 손이 가~ 눈이 가요 눈이 가~<br>생새우로 만든 대한민국 오리지널 스낵!</p>
+            </div>
+        </div>
+
+        <div class="snack-card" draggable="true" 
+             data-name="콘초 🌽🍫" 
+             data-img="con.jpg">
+            <div class="snack-avatar">🌽</div>
+            <div class="snack-info">
+                <h3>콘초</h3>
+                <p>부드럽고 고소한 콘스낵 위에<br>달콤한 초콜릿이 듬뿍 발라진 꿀조합!</p>
+            </div>
+        </div>
+
+        <div class="snack-card" draggable="true" 
+             data-name="칸쵸 🍪" 
+             data-img="con">
+            <div class="snack-avatar">🍪</div>
+            <div class="snack-info">
+                <h3>칸쵸</h3>
+                <p>바삭한 동글이 과자 속에 달콤한 초코!<br>귀여운 캐릭터 그림을 찾는 재미까지</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cards = document.querySelectorAll('.snack-card');
+        const dropZone = document.getElementById('drop-zone');
+        const placeholder = document.getElementById('placeholder-text');
+        const cameraImage = document.getElementById('camera-image');
+        const resultPopup = document.getElementById('result-popup');
+        const resultText = document.getElementById('snack-result-text');
+
+        // 1. 드래그 시작 데이터 탑재
+        cards.forEach(card => {
+            card.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('snackName', card.dataset.name);
+                e.dataTransfer.setData('snackImg', card.dataset.img);
+            });
+        });
+
+        // 2. 드래그 영역 진입시 피드백
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        // 3. 영역 이탈
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+
+        // 4. 드롭 성공 처리
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+
+            const snackName = e.dataTransfer.getData('snackName');
+            const imageUrl = e.dataTransfer.getData('snackImg');
+
+            if (snackName && imageUrl) {
+                resultPopup.classList.remove('active');
+
+                placeholder.style.display = 'none';
+                cameraImage.src = imageUrl;
+                cameraImage.style.display = 'block';
+
+                setTimeout(() => {
+                    resultText.textContent = `"${snackName}" 입니다!`;
+                    resultPopup.classList.add('active');
+                }, 250);
+            }
+        });
+    </script>
+</body>
+</html>
