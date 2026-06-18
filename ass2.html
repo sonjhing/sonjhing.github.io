@@ -3,513 +3,389 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ASSET DASHBOARD — SONJIHEE</title>
+<title>OVERCLOCKED CYBER AI CONSOLE</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 <style>
   :root {
-    --neon-blue: #00aaff;
-    --neon-cyan: #00eeff;
-    --neon-ice: #aaddff;
-    --dark-bg: #020813;
-    --panel-bg: rgba(0, 15, 35, 0.75);
-    --border-glow: rgba(0, 170, 255, 0.25);
-    --text: #cceeff;
-    --text-dim: rgba(150, 210, 255, 0.5);
-    --green: #00ff88;
-    --red: #ff3355;
+    --neon-cyan: #00ffcc;
+    --neon-blue: #0077ff;
+    --neon-magenta: #ff3df0; 
+    --neon-red: #ff0055;
+    --dark-bg: #000000;
+    --border-glow: rgba(0, 255, 236, 0.2);
+    --text: #d0f8ff;
+    --text-dim: rgba(0, 255, 236, 0.35);
+    --up-color: #00ffcc;   
+    --down-color: #ff3df0; 
   }
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { height: 100vh; background: var(--dark-bg); color: var(--text); font-family: 'Inter', sans-serif; overflow: hidden; position: relative; }
 
-  body {
-    height: 100vh;
-    background: var(--dark-bg);
-    color: var(--text);
-    font-family: 'Share Tech Mono', monospace;
-    overflow: hidden;
-    position: relative;
+  /* === 💻 리얼 리눅스 커널/해킹 스타일 부팅 스크린 === */
+  #bootScreen {
+    position: fixed; inset: 0; background: #000; z-index: 9999; padding: 40px;
+    font-family: 'Share Tech Mono'; color: #00ffcc; font-size: 1rem; line-height: 1.4;
+    overflow: hidden; white-space: pre-wrap; word-break: break-all;
+    transition: all 0.5s cubic-bezier(1, 0, 0, 1);
   }
 
-  /* === Background Grid & Glow === */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,170,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,170,255,0.03) 1px, transparent 1px);
-    background-size: 30px 30px;
-    z-index: 0;
-    pointer-events: none;
+  /* === 🚨 하이퍼 경고 오버레이 (마우스 트리거 연동) === */
+  #alertOverlay {
+    position: fixed; inset: 0; background: rgba(255, 0, 85, 0.3); z-index: 9000; pointer-events: none;
+    opacity: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    border: 15px solid var(--neon-red); box-shadow: inset 0 0 200px rgba(255,0,85,0.8); backdrop-filter: saturate(300%) blur(4px) invert(10%);
+  }
+  #alertOverlay.active { animation: alertPulse 0.15s infinite alternate; opacity: 1; }
+  @keyframes alertPulse { 
+    0% { opacity: 0.5; filter: hue-rotate(0deg) skewX(-4deg) scale(1); } 
+    100% { opacity: 1; filter: hue-rotate(45deg) skewX(4deg) scale(1.02); } 
+  }
+  .alert-banner { font-family: 'Orbitron'; font-weight: 900; font-size: 5rem; color: #fff; text-shadow: 0 0 40px var(--neon-red); }
+  .alert-sub { font-family: 'Share Tech Mono'; font-size: 1.4rem; color: #fff; margin-top: 15px; letter-spacing: 0.3em; text-shadow: 0 0 10px #000; }
+
+  /* === 🌌 백그라운드 매트릭스 레이어 === */
+  #bgParticles, #trailCanvas { position: fixed; inset: 0; pointer-events: none; }
+  #bgParticles { z-index: 1; opacity: 0.4; }
+  #trailCanvas { z-index: 9998; mix-blend-mode: screen; } 
+  .laser-scan {
+    position: fixed; inset: 0; height: 8px; background: linear-gradient(to bottom, transparent, rgba(0, 119, 255, 0.3), transparent);
+    z-index: 2; pointer-events: none; animation: scanMove 3s linear infinite;
+  }
+  @keyframes scanMove { 0% { transform: translateY(-100vh); } 100% { transform: translateY(100vh); } }
+
+  /* === ☠️ 화면 강제 붕괴 글리치 === */
+  .screen-glitch { animation: screenShake 0.3s steps(3) infinite; }
+  @keyframes screenShake {
+    0% { transform: translate(2px, -2px); filter: contrast(1.5) brightness(1.2); }
+    50% { transform: translate(-3px, 3px); filter: hue-rotate(180deg) invert(100%); }
+    100% { transform: translate(3px, 2px); }
   }
 
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at 50% 10%, rgba(0,120,255,0.15) 0%, transparent 70%);
-    z-index: 0;
-    pointer-events: none;
+  .glitch { position: relative; animation: glitchText 1.5s infinite; }
+  @keyframes glitchText {
+    0%, 90%, 100% { text-shadow: 0 0 8px var(--neon-cyan); transform: skew(0); }
+    93% { text-shadow: -4px 0 var(--neon-magenta), 4px 0 var(--neon-cyan); transform: skew(-7deg); }
+    96% { text-shadow: 4px 0 var(--neon-magenta), -4px 0 var(--neon-cyan); transform: skew(7deg); }
   }
 
-  .scanlines {
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 170, 255, 0.01) 2px, rgba(0, 170, 255, 0.01) 4px);
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  /* === Fullscreen App Layout === */
-  .dashboard {
-    position: relative;
-    z-index: 2;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  /* === TOP BAR === */
+  /* === 📊 메인 그리드 대시보드 === */
+  .dashboard { position: relative; z-index: 3; height: 100vh; display: flex; flex-direction: column; }
   .topbar {
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    background: rgba(0, 8, 20, 0.95);
-    border-bottom: 1px solid var(--border-glow);
-    box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+    height: 65px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+    background: #000; border-bottom: 2px solid var(--neon-blue); box-shadow: 0 0 30px rgba(0, 119, 255, 0.3);
   }
-
-  .topbar-left, .topbar-right { display: flex; align-items: center; gap: 16px; }
-
-  .logo {
-    font-family: 'Orbitron', monospace;
-    font-size: 1rem;
-    font-weight: 900;
-    color: var(--neon-cyan);
-    text-shadow: 0 0 10px var(--neon-cyan);
-    letter-spacing: 0.1em;
+  .home-btn {
+    display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: rgba(255, 61, 240, 0.1);
+    border: 2px solid var(--neon-magenta); color: #fff; font-family: 'Orbitron'; font-size: 0.8rem; font-weight: bold;
+    text-decoration: none; box-shadow: 0 0 15px var(--neon-magenta); transition: all 0.2s;
   }
+  .home-btn:hover { background: var(--neon-magenta); color: #000; box-shadow: 0 0 30px var(--neon-magenta); }
 
-  .terminal-status {
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    border-left: 2px solid var(--neon-blue);
-    padding-left: 10px;
+  .main-layout { flex: 1; display: flex; flex-direction: column; height: calc(100vh - 97px); }
+  .panel-column {
+    background: rgba(0, 2, 10, 0.85); backdrop-filter: blur(25px); border: 1px solid rgba(0, 119, 255, 0.25);
+    box-shadow: inset 0 0 40px rgba(0,119,255,0.1); display: flex; flex-direction: column; overflow: hidden; position: relative;
   }
-
-  .live-badge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.75rem;
-    color: var(--green);
-    text-shadow: 0 0 8px var(--green);
-  }
-
-  .live-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 8px var(--green);
-    animation: pulse-dot 1.5s ease-in-out infinite;
-  }
-
-  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-  /* === MAIN CONTENT (No Scroll Layout) === */
-  .main-grid {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    height: calc(100vh - 82px); /* 50px topbar + 32px footer ticker */
-  }
-
-  /* === SIDEBAR WATCHLIST === */
-  .sidebar {
-    background: rgba(0, 5, 15, 0.9);
-    border-right: 1px solid var(--border-glow);
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    overflow-y: auto;
-  }
-
-  .sidebar-section-title {
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    color: var(--neon-blue);
-    text-transform: uppercase;
-    padding-bottom: 4px;
-    border-bottom: 1px solid rgba(0,170,255,0.2);
-  }
-
-  .ticker-list { display: flex; flex-direction: column; gap: 4px; }
-
-  .ticker-item {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    padding: 8px;
-    border: 1px solid rgba(0,170,255,0.05);
-    background: rgba(0,20,50,0.2);
-    font-size: 0.75rem;
-    border-radius: 3px;
-  }
-
-  .ticker-item:hover { border-color: rgba(0,170,255,0.3); background: rgba(0,20,50,0.4); }
-
-  .ticker-name { color: #fff; font-weight: bold; }
-  .ticker-up { color: var(--green); }
-  .ticker-down { color: var(--red); }
-
-  /* === WORKSPACE === */
-  .workspace {
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    height: 100%;
-  }
-
-  /* === EXPANDED KPI DASHBOARD (크기 키움) === */
-  .kpi-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-  }
-
-  .kpi-card {
-    background: rgba(0, 25, 60, 0.5);
-    border: 1px solid var(--neon-blue);
-    padding: 18px 16px; /* 패딩을 늘려 크기 확대 */
-    border-radius: 6px;
-    box-shadow: 0 0 15px rgba(0,170,255,0.1), inset 0 0 15px rgba(0,170,255,0.1);
-    position: relative;
-  }
-  
-  /* HTS 감성의 모서리 포인트 효과 추가 */
-  .kpi-card::before {
-    content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 6px;
-    border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan);
-  }
-
-  .kpi-label {
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
-    color: var(--neon-ice);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    font-weight: bold;
-  }
-
-  .kpi-value {
-    font-family: 'Orbitron', monospace;
-    font-size: 1.8rem; /* 폰트 크기 확대 */
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255,255,255,0.2);
-  }
-
-  .kpi-change { font-size: 0.9rem; margin-top: 6px; font-weight: 500; }
-  .kpi-change.up { color: var(--green); }
-  .kpi-change.down { color: var(--red); }
-
-  /* === TRADING VIEW (그래프 비중 줄임) === */
-  .trading-view {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 14px;
-    min-height: 0; 
-  }
-
-  .panel {
-    background: var(--panel-bg);
-    border: 1px solid var(--border-glow);
-    border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-  }
-
   .panel-header {
-    height: 34px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 14px;
-    background: rgba(0, 25, 60, 0.4);
-    border-bottom: 1px solid rgba(0,170,255,0.15);
+    height: 40px; display: flex; align-items: center; padding: 0 15px;
+    background: linear-gradient(90deg, rgba(0, 119, 255, 0.2), transparent); border-bottom: 1px solid rgba(0, 119, 255, 0.3);
+    font-family: 'Orbitron'; font-size: 0.75rem; color: var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan);
   }
 
-  .panel-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 0.75rem;
-    color: var(--neon-cyan);
-    letter-spacing: 0.05em;
+  .top-section { display: flex; height: 42%; min-height: 220px; }
+  #sub-panel-left { width: 40%; min-width: 320px; border-right: 1px solid rgba(0, 119, 255, 0.3); }
+  #sub-panel-right { flex: 1; }
+  .row-resizer { height: 6px; background: rgba(0, 119, 255, 0.2); cursor: row-resize; z-index: 10; }
+  .row-resizer:hover, .row-resizer.dragging { background: var(--neon-blue); box-shadow: 0 0 20px var(--neon-blue); }
+  
+  /* 🎯 마우스 인터랙티브 타겟 박스 (파란색 메인 스크린화) */
+  .bottom-section { 
+    flex: 1; min-height: 250px; position: relative; 
+    border: 1px solid rgba(0, 119, 255, 0.4);
+    background: rgba(0, 8, 30, 0.6);
+    transition: background 0.3s;
+  }
+  .bottom-section:hover {
+    background: rgba(0, 15, 50, 0.75);
+    border-color: var(--neon-cyan);
+    box-shadow: inset 0 0 50px rgba(0, 119, 255, 0.3);
   }
 
-  .panel-badge {
-    font-size: 0.65rem;
-    padding: 2px 6px;
-    border: 1px solid var(--neon-blue);
-    color: var(--neon-blue);
-    border-radius: 2px;
+  #lockOnFrame {
+    position: absolute; width: 120px; height: 120px; border: 3px dashed var(--neon-cyan);
+    top: 50%; left: 50%; transform: translate(-50%, -50%) scale(2.5); opacity: 0;
+    pointer-events: none; z-index: 999; transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex; justify-content: center; align-items: center; font-family: 'Orbitron'; font-size: 11px; color: var(--neon-cyan);
   }
+  #lockOnFrame.locking { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(180deg); border-color: var(--neon-magenta); color: var(--neon-magenta); filter: drop-shadow(0 0 15px var(--neon-magenta)); }
 
-  /* 그래프 크기 축소 및 패딩 조정 */
-  .panel-body-chart {
-    flex: 1;
-    padding: 8px 16px; /* 세로 패딩 압축 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 0;
+  .sidebar-list { flex: 1; overflow-y: auto; padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stock-item {
+    display: flex; justify-content: space-between; align-items: center; padding: 14px;
+    background: rgba(0, 119, 255, 0.02); border: 1px solid rgba(0, 119, 255, 0.15); cursor: pointer; transition: all 0.2s;
   }
+  .stock-item.active { border-color: #00ffcc; box-shadow: 0 0 20px rgba(0,255,204,.4); background: rgba(0, 255, 236, 0.12); }
+  .stock-name { font-size: 0.85rem; font-weight: 700; color: #a5d7e8; font-family: 'Orbitron'; }
+  .stock-price { font-family: 'Share Tech Mono'; font-size: 1.05rem; }
 
-  .chart-svg-wrapper {
-    width: 100%;
-    height: 100%;
-    max-height: 160px; /* 차트의 최대 높이를 제한해 크기 축소 */
-  }
+  .ai-status { display: flex; align-items: center; gap: 10px; color: #00ffcc; font-family: 'Orbitron'; font-size: 0.85rem; padding: 15px 20px 5px 20px; }
+  .pulse { width: 10px; height: 10px; border-radius: 50%; background: #00ffcc; animation: pulse 1s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 255, 204, .8); } 100% { box-shadow: 0 0 0 15px rgba(0, 255, 204, 0); } }
 
-  .chart-svg-wrapper svg {
-    width: 100%;
-    height: 100%;
-  }
+  .ai-container { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; padding: 10px 20px 20px 20px; flex: 1; }
+  .ai-board { background: rgba(0, 5, 15, 0.8); border: 1px solid rgba(0, 119, 255, 0.2); padding: 15px; display: flex; align-items: center; gap: 20px; position: relative; }
+  .ai-lbl { font-family: 'Orbitron'; font-size: 0.7rem; color: var(--text-dim); position: absolute; top: 10px; left: 15px; }
+  
+  .gauge-box { width: 80px; height: 80px; position: relative; margin-top: 12px; }
+  .gauge-box svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .gauge-box circle { fill: none; stroke-width: 7; stroke-linecap: round; }
+  .gauge-bg { stroke: rgba(0, 255, 236, 0.05); }
+  .gauge-fill { stroke: var(--neon-cyan); stroke-dasharray: 220; stroke-dashoffset: 50; transition: stroke-dashoffset 0.5s ease; }
+  .gauge-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Share Tech Mono'; font-size: 1.1rem; font-weight: bold; margin-top: 12px; }
 
-  /* Table Grid View */
-  .panel-body-table {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0;
-  }
+  .chart-info-bar { display: flex; align-items: center; gap: 30px; padding: 15px 25px; background: rgba(0, 5, 15, 0.6); border-bottom: 1px solid rgba(0, 119, 255, 0.25); }
+  .chart-title { font-family: 'Orbitron'; font-weight: 900; font-size: 1.1rem; }
+  .chart-current-price { font-family: 'Share Tech Mono'; font-size: 2.2rem; font-weight: bold; }
+  .chart-container { flex: 1; padding: 10px; min-height: 0; }
 
-  .data-table { width: 100%; border-collapse: collapse; text-align: left; }
+  .ticker-bar { height: 32px; background: #000; border-top: 1px solid var(--neon-blue); display: flex; align-items: center; overflow: hidden; }
+  .ticker-track { display: flex; gap: 50px; animation: ticker-run 20s linear infinite; white-space: nowrap; }
+  @keyframes ticker-run { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  .ticker-chip { display: inline-flex; gap: 12px; font-size: 0.8rem; font-family: 'Share Tech Mono'; }
 
-  .data-table th {
-    position: sticky;
-    top: 0;
-    background: rgba(0, 12, 30, 0.95);
-    font-size: 0.65rem;
-    color: var(--text-dim);
-    padding: 8px 12px;
-    border-bottom: 1px solid rgba(0,170,255,0.2);
-    text-transform: uppercase;
-    z-index: 10;
-  }
-
-  .data-table td {
-    font-size: 0.75rem;
-    padding: 8px 12px;
-    border-bottom: 1px solid rgba(0,170,255,0.05);
-    font-family: 'Share Tech Mono', monospace;
-  }
-
-  .data-table tr:hover td { background: rgba(0,170,255,0.08); }
-
-  .td-name { color: #fff; font-weight: 500; }
-  .td-up { color: var(--green); }
-  .td-down { color: var(--red); }
-
-  /* === TICKER BOTTOM BAR === */
-  .ticker-bar {
-    height: 32px;
-    background: rgba(0, 5, 15, 0.95);
-    border-top: 1px solid var(--border-glow);
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  .ticker-track {
-    display: flex;
-    gap: 32px;
-    animation: ticker-run 25s linear infinite;
-    white-space: nowrap;
-  }
-
-  @keyframes ticker-run {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-
-  .ticker-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.72rem;
-  }
-  .ticker-chip .name { color: var(--neon-ice); font-weight: bold; }
-  .ticker-chip .up { color: var(--green); }
-  .ticker-chip .dn { color: var(--red); }
-
+  .up-text { color: var(--up-color); text-shadow: 0 0 12px rgba(0,255,204,0.5); }
+  .down-text { color: var(--down-color); text-shadow: 0 0 12px rgba(255,61,240,0.5); }
 </style>
 </head>
 <body>
-<div class="scanlines"></div>
 
-<div class="dashboard">
-  <!-- TOP BAR -->
+<div id="bootScreen"></div>
+
+<div id="alertOverlay">
+  <div class="alert-banner">CRITICAL BREACH</div>
+  <div class="alert-sub">SYSTEM TRIPPED BY OPERATOR SIGNAL // RE-CALIBRATING CORE</div>
+</div>
+
+<canvas id="bgParticles"></canvas>
+<canvas id="trailCanvas"></canvas>
+<div class="laser-scan"></div>
+
+<div class="dashboard" id="mainDashboard">
   <header class="topbar">
-    <div class="topbar-left">
-      <div class="logo">◈ SONJIHEE_TERMINAL v2.4</div>
-      <div class="terminal-status">SYS_STATUS: ACTIVE</div>
-    </div>
-    <div class="topbar-right">
-      <div class="live-badge"><div class="live-dot"></div> MONITOR_LIVE</div>
-      <div id="clock" style="font-size: 0.8rem; color: var(--neon-cyan);">00:00:00</div>
-    </div>
+    <a href="index.html" class="home-btn"><i class="fa-solid fa-radiation"></i> RETURN TO MAIN GRID</a>
+    <div class="logo glitch">▲ TERMINAL // QUANTUM_HORIZON_v7.2</div>
+    <div id="cyberClock" style="font-family:'Share Tech Mono'; font-size: 1.1rem; color:var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue);">00:00:00.000</div>
   </header>
 
-  <!-- MAIN WRAPPER -->
-  <div class="main-grid">
-    <!-- LEFT SIDEBAR: WATCHLIST -->
-    <aside class="sidebar">
-      <div>
-        <div class="sidebar-section-title" style="margin-bottom: 8px;">GLOBAL INDEX</div>
-        <div class="ticker-list">
-          <div class="ticker-item"><span class="ticker-name">KRX 코스피</span><span class="ticker-up">▲ 1.32%</span></div>
-          <div class="ticker-item"><span class="ticker-name">NASDAQ</span><span class="ticker-up">▲ 0.87%</span></div>
-          <div class="ticker-item"><span class="ticker-name">S&amp;P 500</span><span class="ticker-up">▲ 0.44%</span></div>
-          <div class="ticker-item"><span class="ticker-name">HSI 항셍</span><span class="ticker-down">▼ 0.54%</span></div>
-          <div class="ticker-item"><span class="ticker-name">NIKKEI 225</span><span class="ticker-down">▼ 0.21%</span></div>
+  <div class="main-layout">
+    <div class="top-section" id="top-panel">
+      <div class="panel-column" id="sub-panel-left">
+        <div class="panel-header">// STREAMING MARKET MATRIX</div>
+        <div class="sidebar-list">
+          <div class="stock-item active" data-symbol="삼성전자"><span class="stock-name">삼성전자</span><span class="stock-price up-text" id="lst-sam">165,000 ▲</span></div>
+          <div class="stock-item" data-symbol="대한광통신"><span class="stock-name">대한광통신</span><span class="stock-price up-text">24,500 ▲</span></div>
+          <div class="stock-item" data-symbol="NAVER"><span class="stock-name">NAVER</span><span class="stock-price down-text">185,200 ▼</span></div>
+          <div class="stock-item" data-symbol="카카오"><span class="stock-name">카카오</span><span class="stock-price down-text">43,100 ▼</span></div>
+          <div class="stock-item" data-symbol="현대차"><span class="stock-name">현대차</span><span class="stock-price up-text">241,000 ▲</span></div>
         </div>
       </div>
-      <div>
-        <div class="sidebar-section-title" style="margin-bottom: 8px;">CRYPTO CORE</div>
-        <div class="ticker-list">
-          <div class="ticker-item"><span class="ticker-name">BITCOIN</span><span class="ticker-up">▲ 3.15%</span></div>
-          <div class="ticker-item"><span class="ticker-name">ETHEREUM</span><span class="ticker-up">▲ 1.92%</span></div>
-        </div>
-      </div>
-    </aside>
 
-    <!-- RIGHT MAIN WORKSPACE -->
-    <main class="workspace">
-      <!-- EXPANDED KPI ROW (상단 네모 박스 크기 확대) -->
-      <section class="kpi-row">
-        <div class="kpi-card">
-          <div class="kpi-label">Taihan Fiberoptics</div>
-          <div class="kpi-value" style="color: var(--green);">24,500 <span style="font-size:0.8rem; color:var(--text-dim)">KRW</span></div>
-          <div class="kpi-change up">▲ +740.00% TOTAL</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">SAMSUNG</div>
-          <div class="kpi-value">165,000</div>
-          <div class="kpi-change up">▲ +121.40% TOTAL</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Sandisk</div>
-          <div class="kpi-value">2,334,852</div>
-          <div class="kpi-change up">▲ +155.47% TOTAL</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Hyundai</div>
-          <div class="kpi-value">659.000</div>
-          <div class="kpi-change up">▲ +21.25% TOTAL</div>
-        </div>
-      </section>
-
-      <!-- TRADING MAIN PANEL (하단 크기 압축) -->
-      <div class="trading-view">
-        <!-- SVG LINE CHART PANEL -->
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">INTERACTIVE PERFORMANCE INDEX</div>
-            <div class="panel-badge">REAL-TIME GRAVITY</div>
+      <div class="panel-column" id="sub-panel-right">
+        <div class="panel-header">// CYBERNETIC PREDICTOR CORE</div>
+        <div class="ai-status"><span class="pulse"></span>AI COGNITIVE THREAD RUNNING</div>
+        <div class="ai-container">
+          <div class="ai-board">
+            <div class="ai-lbl">PROBABILISTIC VECTOR RECKONING</div>
+            <div class="gauge-box">
+              <svg><circle class="gauge-bg" cx="40" cy="40" r="35"></circle><circle class="gauge-fill" id="gFill" cx="40" cy="40" r="35"></circle></svg>
+              <div class="gauge-text" id="gTxt">88%</div>
+            </div>
+            <div style="margin-top:15px;"><div id="prediction" class="glitch"><span style="color:#00ffcc">BULLISH</span></div></div>
           </div>
-          <div class="panel-body-chart">
-            <div class="chart-svg-wrapper">
-              <svg viewBox="0 0 700 150" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#00aaff" stop-opacity="0.25"/>
-                    <stop offset="100%" stop-color="#00aaff" stop-opacity="0"/>
-                  </linearGradient>
-                </defs>
-                <!-- Grid Lines -->
-                <line x1="0" y1="30" x2="700" y2="30" stroke="rgba(0,170,255,0.05)" stroke-width="1"/>
-                <line x1="0" y1="65" x2="700" y2="65" stroke="rgba(0,170,255,0.05)" stroke-width="1"/>
-                <line x1="0" y1="100" x2="700" y2="100" stroke="rgba(0,170,255,0.05)" stroke-width="1"/>
-                <!-- Area Path -->
-                <path d="M0,120 L70,100 L140,105 L210,80 L280,88 L350,60 L420,45 L490,65 L560,30 L630,40 L700,15 L700,150 L0,150 Z" fill="url(#lineGrad)"/>
-                <!-- Main Trend Line -->
-                <path d="M0,120 L70,100 L140,105 L210,80 L280,88 L350,60 L420,45 L490,65 L560,30 L630,40 L700,15" fill="none" stroke="#00eeff" stroke-width="2"/>
-                <!-- Dynamic Dots -->
-                <circle cx="700" cy="15" r="4" fill="#00ff88"/>
-                <!-- Timeline Labels -->
-                <text x="10" y="142" fill="rgba(150,210,255,0.3)" font-size="10">09:00</text>
-                <text x="175" y="142" fill="rgba(150,210,255,0.3)" font-size="10">11:00</text>
-                <text x="345" y="142" fill="rgba(150,210,255,0.3)" font-size="10">13:00</text>
-                <text x="515" y="142" fill="rgba(150,210,255,0.3)" font-size="10">15:00</text>
-                <text x="665" y="142" fill="rgba(150,210,255,0.3)" font-size="10">CLOSE</text>
-              </svg>
+          <div class="ai-board">
+            <div class="ai-lbl">ALGORITHM FEED TRACE</div>
+            <div style="font-family:'Share Tech Mono'; font-size:0.75rem; color:#8ab4f8; line-height:1.5; padding-top:12px;">
+              [CORE]: INTERCEPTING WALLSTREET DATA...<br>[MEM]: NODE CORRELATION STABLE<br>[THX]: OVERCLOCK FLOW STATE ACTIVATED
             </div>
           </div>
         </div>
-
-        <!-- HOLDINGS POSITION TABLE PANEL -->
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">MY POSITION HOLDINGS</div>
-            <div class="panel-badge" style="border-color:var(--green); color:var(--green)">SECURED</div>
-          </div>
-          <div class="panel-body-table">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>ASSET CODE</th>
-                  <th style="text-align: right;">CHANGE %</th>
-                  <th style="text-align: right;">VALUATION</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td class="td-name">SAMSUNG ELECTRONICS</td><td class="td-up" style="text-align: right;">+2.10%</td><td style="text-align: right; color: var(--neon-ice);">₩1,200,000</td></tr>
-                <tr><td class="td-name">KAKAO CORP</td><td class="td-down" style="text-align: right;">-0.80%</td><td style="text-align: right; color: var(--neon-ice);">₩540,000</td></tr>
-                <tr><td class="td-name">NAVER</td><td class="td-up" style="text-align: right;">+1.50%</td><td style="text-align: right; color: var(--neon-ice);">₩890,000</td></tr>
-                <tr><td class="td-name">BITCOIN (BTC)</td><td class="td-up" style="text-align: right;">+3.10%</td><td style="text-align: right; color: var(--neon-ice);">₩700,000</td></tr>
-                <tr><td class="td-name">ETHEREUM (ETH)</td><td class="td-up" style="text-align: right;">+1.90%</td><td style="text-align: right; color: var(--neon-ice);">₩420,000</td></tr>
-                <tr><td class="td-name">TESLA MOTORS</td><td class="td-down" style="text-align: right;">-1.20%</td><td style="text-align: right; color: var(--neon-ice);">₩450,000</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
-    </main>
+    </div>
+
+    <div class="row-resizer" id="row-resizer"></div>
+
+    <div class="panel-column bottom-section" id="bottom-panel">
+      <div id="lockOnFrame"><div>[ TARGET LOCK ]</div></div>
+      <div class="chart-info-bar">
+        <div class="chart-title">SAMSUNG전자 QUANTUM MATRIX</div>
+        <div class="chart-current-price up-text" id="main-price">165,000</div>
+        <div class="chart-change up-text" id="main-change">▲ 3,500 (+2.16%)</div>
+      </div>
+      <div class="chart-container" id="candlestick-chart"></div>
+    </div>
   </div>
 
-  <!-- RUNNING TICKER FOOTER BAR -->
   <div class="ticker-bar">
     <div class="ticker-track">
-      <span class="ticker-chip"><span class="name">KRX</span> 2,814.32 <span class="up">▲+1.32%</span></span>
-      <span class="ticker-chip"><span class="name">NASDAQ</span> 18,432.11 <span class="up">▲+0.87%</span></span>
-      <span class="ticker-chip"><span class="name">HSI</span> 19,204.55 <span class="dn">▼-0.54%</span></span>
-      <span class="ticker-chip"><span class="name">S&amp;P500</span> 5,321.00 <span class="up">▲+0.44%</span></span>
-      <span class="ticker-chip"><span class="name">NIKKEI</span> 38,100.44 <span class="dn">▼-0.21%</span></span>
-      <span class="ticker-chip"><span class="name">BTC/USD</span> $67,420 <span class="up">▲+3.15%</span></span>
-      <span class="ticker-chip"><span class="name">ETH/USD</span> $3,540 <span class="up">▲+1.92%</span></span>
-      <!-- Seamless loop duplicate -->
-      <span class="ticker-chip"><span class="name">KRX</span> 2,814.32 <span class="up">▲+1.32%</span></span>
-      <span class="ticker-chip"><span class="name">NA SDAQ</span> 18,432.11 <span class="up">▲+0.87%</span></span>
-      <span class="ticker-chip"><span class="name">HSI</span> 19,204.55 <span class="dn">▼-0.54%</span></span>
-      <span class="ticker-chip"><span class="name">S&amp;P500</span> 5,321.00 <span class="up">▲+0.44%</span></span>
+      <span class="ticker-chip"><span class="name">KOSPI</span> <span class="up-text">2,814.32 ▲ 1.32%</span></span>
+      <span class="ticker-chip"><span class="name">NASDAQ</span> <span class="up-text">18,432.11 ▲ 1.2%</span></span>
     </div>
   </div>
 </div>
 
 <script>
-  function updateClock() {
-    const now = new Date();
-    document.getElementById('clock').textContent =
-      now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+// === 1. 즉시 상승하는 부팅 스크린 연출 ===
+const bootScreen = document.getElementById("bootScreen");
+
+// 글씨 출력 없이 즉시 위로 슬라이드 처리
+bootScreen.style.transform = "translateY(-100vh) scaleY(0)";
+bootScreen.style.opacity = "0"; 
+setTimeout(() => bootScreen.remove(), 500);
+
+// === 🚨 2. 전역 시스템 공통 비상 알림 트리거 장치 ===
+const alertOverlay = document.getElementById("alertOverlay");
+const mainDashboard = document.getElementById("mainDashboard");
+
+function triggerWarningProtocol() {
+  alertOverlay.classList.add("active");
+  mainDashboard.classList.add("screen-glitch");
+
+  setTimeout(() => {
+    alertOverlay.classList.remove("active");
+    mainDashboard.classList.remove("screen-glitch");
+  }, 1600);
+}
+
+// 기본 10초 주기 타이머 제거 완료 (마우스 오버 3회 트리거만 유지)
+
+// === 🎯 3. [핵심] 파란 차트 영역 마우스 오버 3회 타격 히든 트리거 장치 ===
+let chartHoverCount = 0;
+const bottomPanel = document.getElementById("bottom-panel");
+
+bottomPanel.addEventListener("mouseenter", () => {
+  chartHoverCount++;
+  console.log(`[TRIGGER LOG]: 그래프 영역 진입 감지 -> 카운트: ${chartHoverCount}/5`);
+  
+  if (chartHoverCount % 5 === 0) {
+    triggerWarningProtocol(); // 3번째 진입 시 즉시 강제 발동
   }
-  updateClock();
-  setInterval(updateClock, 1000);
+});
+
+// === 4. 밀리초 시계 ===
+function updateClock() {
+  const now = new Date();
+  document.getElementById('cyberClock').innerText = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}.${String(now.getMilliseconds()).padStart(3,'0')}`;
+  requestAnimationFrame(updateClock);
+}
+requestAnimationFrame(updateClock);
+
+// === 5. 블루/시안 마우스 입자 체인 ===
+const tCanvas = document.getElementById("trailCanvas"); const tCtx = tCanvas.getContext("2d");
+let pts = [];
+function resizeTrail() { tCanvas.width = window.innerWidth; tCanvas.height = window.innerHeight; }
+resizeTrail(); window.addEventListener('resize', resizeTrail);
+window.addEventListener('mousemove', (e) => {
+  for(let i=0; i<3; i++) { pts.push({ x: e.clientX, y: e.clientY, r: Math.random()*3+1, vx: (Math.random()-0.5)*2.5, vy: (Math.random()-0.5)*2.5, alpha: 1 }); }
+});
+function drawTrails() {
+  tCtx.clearRect(0,0,tCanvas.width,tCanvas.height);
+  pts.forEach((p, idx) => {
+    p.x += p.vx; p.y += p.vy; p.alpha -= 0.04; if(p.alpha <= 0) { pts.splice(idx, 1); return; }
+    tCtx.beginPath(); tCtx.arc(p.x, p.y, p.r, 0, Math.PI*2); tCtx.fillStyle = `rgba(0, 119, 255, ${p.alpha})`; tCtx.fill();
+  });
+  requestAnimationFrame(drawTrails);
+}
+requestAnimationFrame(drawTrails);
+
+// === 6. 사이버 그리드 판넬 배경 회전체 ===
+const canvas = document.getElementById("bgParticles"); const ctx = canvas.getContext("2d");
+function resizeBg(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+resizeBg(); window.addEventListener("resize", resizeBg);
+const gridBlocks = Array.from({length:20}, () => ({ x: Math.random()*innerWidth, y: Math.random()*innerHeight, size: Math.random()*40+20, angle: Math.random()*360, speed: Math.random()*0.3+0.1 }));
+function animateBg(){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = "rgba(0, 119, 255, 0.1)";
+  ctx.lineWidth = 1;
+  gridBlocks.forEach(b => {
+    b.angle += b.speed; ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.angle * Math.PI / 180); ctx.strokeRect(-b.size/2, -b.size/2, b.size, b.size); ctx.restore();
+  });
+  requestAnimationFrame(animateBg);
+}
+animateBg();
+
+// === 7. 세로 리사이저 인터랙션 ===
+const resizer = document.getElementById('row-resizer'); const topPanel = document.getElementById('top-panel');
+resizer.addEventListener('mousedown', function(e) {
+  e.preventDefault(); const startY = e.clientY; const topHeight = topPanel.offsetHeight; resizer.classList.add('dragging');
+  function onMouseMove(e) { const deltaY = e.clientY - startY; if (topHeight + deltaY > 120 && e.clientY < window.innerHeight - 120) { topPanel.style.height = (topHeight + deltaY) + 'px'; } window.dispatchEvent(new Event('resize')); }
+  function onMouseUp() { resizer.classList.remove('dragging'); document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); }
+  document.addEventListener('mousemove', onMouseMove); document.addEventListener('mouseup', onMouseUp);
+});
+
+// === 8. 차트 데이터 시스템 ===
+function generateCandleData() {
+  let data = []; let currentPrice = 161500; let time = new Date().getTime() - 60000 * 50; 
+  for (let i = 0; i < 50; i++) {
+    let open = currentPrice; let high = open + Math.random() * 1500; let low = open - Math.random() * 1500; let close = open + (Math.random() - 0.45) * 2000;
+    data.push({ x: time, y: [Math.round(open), Math.round(high), Math.round(low), Math.round(close)] }); currentPrice = close; time += 60000;
+  }
+  return data;
+}
+var options = {
+  series: [{ data: generateCandleData() }],
+  chart: { type: 'candlestick', height: '100%', background: 'transparent', toolbar: { show: false } },
+  plotOptions: { candlestick: { colors: { upward: '#00ffcc', downward: '#ff3df0' }, wick: { useFillColor: true } } },
+  grid: { borderColor: 'rgba(0, 119, 255, 0.05)' },
+  xaxis: { type: 'datetime', labels: { style: { colors: 'rgba(0, 119, 255, 0.4)', fontFamily: 'Share Tech Mono' } } },
+  yaxis: { labels: { style: { colors: 'rgba(0, 119, 255, 0.4)', fontFamily: 'Share Tech Mono' }, formatter: val => Math.round(val).toLocaleString() } },
+  theme: { mode: 'dark' }
+};
+var chart = new ApexCharts(document.querySelector("#candlestick-chart"), options); chart.render();
+
+// === 9. AI 벡터 가속 원형 보드 ===
+const pred = document.getElementById("prediction"); const gFill = document.getElementById("gFill"); const gTxt = document.getElementById("gTxt");
+setInterval(()=>{
+  const val = Math.floor(Math.random()*40)+60; gFill.style.strokeDashoffset = 220 - (220 * val) / 100; gTxt.innerText = `${val}%`;
+  if(val > 78) {
+    gFill.style.stroke = "var(--neon-cyan)"; gTxt.style.color = "var(--neon-cyan)";
+    pred.innerHTML = `<span style="color:#00ffcc; text-shadow:0 0 10px rgba(0,255,204,0.6)">BULLISH CORE</span>`;
+  } else {
+    gFill.style.stroke = "var(--neon-magenta)"; gTxt.style.color = "var(--neon-magenta)";
+    pred.innerHTML = `<span style="color:#ff3df0; text-shadow:0 0 10px rgba(255,61,240,0.6)">BEARISH CORE</span>`;
+  }
+}, 2000);
+
+// === 10. 3초 실시간 차트 업데이트 ===
+setInterval(() => {
+  if(!options.series[0].data.length) return;
+  let last = options.series[0].data.at(-1); let open = last.y[3];
+  let close = open + (Math.random() - 0.5) * 1600; let high = Math.max(open, close) + Math.random() * 400; let low = Math.min(open, close) - Math.random() * 400;
+  options.series[0].data.push({ x: new Date().getTime(), y: [Math.round(open), Math.round(high), Math.round(low), Math.round(close)] });
+  if(options.series[0].data.length > 60) options.series[0].data.shift();
+  chart.updateSeries(options.series);
+  let mainPrice = document.getElementById('main-price');
+  mainPrice.innerText = Math.round(close).toLocaleString();
+  mainPrice.className = close > open ? "chart-current-price up-text" : "chart-current-price down-text";
+}, 3000);
+
+// === 11. 타겟 락온 체인지 스위칭 ===
+document.querySelectorAll('.stock-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    document.querySelectorAll('.stock-item').forEach(i=>i.classList.remove('active'));
+    item.classList.add('active');
+    const lockFrame = document.getElementById("lockOnFrame");
+    lockFrame.classList.add("locking");
+    setTimeout(() => lockFrame.classList.remove("locking"), 650);
+    const name = item.querySelector('.stock-name').innerText.toUpperCase();
+    document.querySelector('.chart-title').textContent = name + " QUANTUM MATRIX";
+    options.series[0].data = generateCandleData();
+    chart.updateSeries(options.series);
+  });
+});
 </script>
 </body>
 </html>
