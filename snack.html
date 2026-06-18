@@ -323,7 +323,9 @@
         <div class="snack-card" draggable="true" 
              data-name="새우깡 🍤" 
              data-img="sae.jpg">
-            <div class="snack-avatar">🍤</div>
+            <div class="snack-avatar">
+                <img src="sae.jpg" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
+            </div>
             <div class="snack-info">
                 <h3>새우깡</h3>
                 <p>손이 가요 손이 가~ 눈이 가요 눈이 가~<br>생새우로 만든 대한민국 오리지널 스낵!</p>
@@ -333,7 +335,9 @@
         <div class="snack-card" draggable="true" 
              data-name="콘초 🌽🍫" 
              data-img="con.jpg">
-            <div class="snack-avatar">🌽</div>
+            <div class="snack-avatar">
+                <img src="con.jpg" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
+            </div>
             <div class="snack-info">
                 <h3>콘초</h3>
                 <p>부드럽고 고소한 콘스낵 위에<br>달콤한 초콜릿이 듬뿍 발라진 꿀조합!</p>
@@ -343,7 +347,9 @@
         <div class="snack-card" draggable="true" 
              data-name="칸쵸 🍪" 
              data-img="kan.jpg">
-            <div class="snack-avatar">🍪</div>
+            <div class="snack-avatar">
+                <img src="kan.jpg" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
+            </div>
             <div class="snack-info">
                 <h3>칸쵸</h3>
                 <p>바삭한 동글이 과자 속에 달콤한 초코!<br>귀여운 캐릭터 그림을 찾는 재미까지</p>
@@ -364,8 +370,11 @@
         // 1. 드래그 시작 데이터 탑재
         cards.forEach(card => {
             card.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('snackName', card.dataset.name);
-                e.dataTransfer.setData('snackImg', card.dataset.img);
+                const payload = JSON.stringify({
+                    name: card.dataset.name,
+                    img: card.dataset.img
+                });
+                e.dataTransfer.setData('text/plain', payload);
             });
         });
 
@@ -385,15 +394,17 @@
             e.preventDefault();
             dropZone.classList.remove('drag-over');
 
-            const snackName = e.dataTransfer.getData('snackName');
-            const imageUrl = e.dataTransfer.getData('snackImg');
+            try {
+                const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                const snackName = data.name;
+                const imageUrl = data.img;
 
-            if (snackName && imageUrl) {
-                // 기존 팝업 및 상태 초기화 후 이미지 노출
-                resultPopup.classList.remove('active');
-                placeholder.style.display = 'none';
-                cameraImage.src = imageUrl;
-                cameraImage.style.display = 'block';
+                if (snackName && imageUrl) {
+                    // 기존 팝업 및 상태 초기화 후 이미지 노출
+                    resultPopup.classList.remove('active');
+                    placeholder.style.display = 'none';
+                    cameraImage.src = imageUrl;
+                    cameraImage.style.display = 'block';
 
                 // 스캔 빔/레이저 이펙트 가동
                 scanEffect.style.display = 'block';
@@ -417,6 +428,9 @@
                     resultStatusTitle.textContent = "🟢 스캔 완료";
                     resultText.textContent = `"${snackName}" 입니다!`;
                 }, 2400);
+            }
+            } catch(e) {
+                console.error('Drag data parse error:', e);
             }
         });
     </script>
